@@ -1,0 +1,244 @@
+ERROR - 2026-02-19 19:49:46 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+CRITICAL - 2026-02-19 19:49:46 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 19:49:46 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'E:\\Semester 6\\p...', 253)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 19:55:54 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+CRITICAL - 2026-02-19 19:55:54 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 19:55:54 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'E:\\Semester 6\\p...', 253)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 19:56:43 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+CRITICAL - 2026-02-19 19:56:43 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 19:56:43 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'E:\\Semester 6\\p...', 253)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 20:06:43 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+CRITICAL - 2026-02-19 20:06:43 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 20:06:44 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'E:\\Semester 6\\p...', 253)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 20:08:18 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+CRITICAL - 2026-02-19 20:08:18 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  password authentication failed for user &quot;postgres&quot;
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 20:08:18 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'E:\\Semester 6\\p...', 253)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 20:14:54 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+CRITICAL - 2026-02-19 20:14:54 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 20:14:54 --> Uncaught ErrorException: filter_var(): Passing null to parameter #3 ($options) of type array|int is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:267
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'filter_var(): P...', 'E:\\Semester 6\\p...', 267)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(267): filter_var('::1', 275, NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 20:15:18 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+CRITICAL - 2026-02-19 20:15:18 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 20:15:18 --> Uncaught ErrorException: filter_var(): Passing null to parameter #3 ($options) of type array|int is deprecated in E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php:267
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'filter_var(): P...', 'E:\\Semester 6\\p...', 267)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Validation\FormatRules.php(267): filter_var('::1', 275, NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 E:\Semester 6\peluit_yuda\Peluit\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(229): include('E:\\Semester 6\\p...')
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(232): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\Debug\Exceptions.php(116): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Database\Exceptions\DatabaseException), 500)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Database\Exceptions\DatabaseException))
+#8 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-02-19 20:17:05 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+CRITICAL - 2026-02-19 20:17:05 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+ERROR - 2026-02-19 20:17:09 --> Error connecting to the database: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+CRITICAL - 2026-02-19 20:17:09 --> Unable to connect to the database.
+Main connection [Postgre]: pg_connect(): Unable to connect to PostgreSQL server: FATAL:  database &quot;db_peluit&quot; does not exist
+#0 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 E:\Semester 6\peluit_yuda\Peluit\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(25): CodeIgniter\BaseModel->findAll()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 21:36:25 --> Undefined variable $url
+#0 E:\Semester 6\peluit_yuda\Peluit\app\Views\homepage\dashboard.php(47): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'E:\\Semester 6\\p...', 47)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\View\View.php(214): include('E:\\Semester 6\\p...')
+#2 E:\Semester 6\peluit_yuda\Peluit\system\View\View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\Common.php(1097): CodeIgniter\View\View->render('homepage/dashbo...', Array, true)
+#4 E:\Semester 6\peluit_yuda\Peluit\app\Controllers\Home.php(29): view('homepage/dashbo...', Array)
+#5 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(824): App\Controllers\Home->index()
+#6 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#7 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#10 {main}
+CRITICAL - 2026-02-19 09:11:38 --> str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'str_replace(): ...', 'E:\\Semester 6\\p...', 438)
+#1 E:\Semester 6\peluit_yuda\Peluit\system\HTTP\ResponseTrait.php(438): str_replace(Array, '', NULL)
+#2 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(389): CodeIgniter\HTTP\Response->send()
+#3 E:\Semester 6\peluit_yuda\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 E:\Semester 6\peluit_yuda\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 E:\Semester 6\peluit_yuda\Peluit\system\Commands\Server\rewrite.php(43): require_once('E:\\Semester 6\\p...')
+#6 {main}
