@@ -21,14 +21,20 @@ use App\Models\Tiket_alat_list;
 use App\Models\Tiket_zoom;
 
 use App\Models\Tiket_magang;
+use App\Models\Pelayanan;
+use App\Models\PelayananField;
+use App\Models\TiketDetail;
 
-class Form extends BaseController {
-    public function __construct() {
+class Form extends BaseController
+{
+    public function __construct()
+    {
         helper(['form', 'url']);
         date_default_timezone_set('Asia/Jakarta');
     }
     
-    public function get_tiket(){
+    public function get_tiket()
+    {
         $db = \Config\Database::connect();
 
         if(session()->get('id_role') == 0){
@@ -48,7 +54,8 @@ class Form extends BaseController {
         echo json_encode($builder);
     }
 
-    public function get_count_tiket(){
+    public function get_count_tiket()
+    {
         $db = \Config\Database::connect();
 
         if(session()->get('id_role') == 0){
@@ -78,7 +85,8 @@ class Form extends BaseController {
         echo json_encode($response);
     }
 
-    public function get_tiket_pelayanan() {
+    public function get_tiket_pelayanan()
+    {
         $db = \Config\Database::connect();
         if($this->request->getVar('status')==4){
             $builder = $db->table('tb_tiket')->select('tb_tiket.id_tiket, tb_tiket.kode_tiket, tb_tiket.tgl_input, tb_tiket.status, sspelayanan.nama_pelayanan, ssuser.nama, ssopd.akronim_opd')->join('sspelayanan', 'tb_tiket.id_pelayanan = sspelayanan.id_pelayanan', 'left')->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')->where('tb_tiket.id_pelayanan', $this->request->getVar('id_pelayanan'))->orderBy('tb_tiket.id_tiket', 'DESC')->get()->getResult();
@@ -89,7 +97,8 @@ class Form extends BaseController {
         echo json_encode($builder);
     }
 
-    public function get_count_tiket_pelayanan() {
+    public function get_count_tiket_pelayanan()
+    {
         $db = \Config\Database::connect();
         $proses = $db->table('tb_tiket')->select('tb_tiket.id_tiket, tb_tiket.kode_tiket, tb_tiket.tgl_input, tb_tiket.status, sspelayanan.nama_pelayanan, ssuser.nama, ssopd.akronim_opd')->join('sspelayanan', 'tb_tiket.id_pelayanan = sspelayanan.id_pelayanan', 'left')->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')->where('tb_tiket.id_pelayanan', $this->request->getVar('id_pelayanan'))->where('tb_tiket.status', 0)->where("date_part('year', tb_tiket.tgl_input)", $this->request->getVar('tahun'))->orderBy('tb_tiket.id_tiket', 'DESC')->countAllResults();
         $selesai = $db->table('tb_tiket')->select('tb_tiket.id_tiket, tb_tiket.kode_tiket, tb_tiket.tgl_input, tb_tiket.status, sspelayanan.nama_pelayanan, ssuser.nama, ssopd.akronim_opd')->join('sspelayanan', 'tb_tiket.id_pelayanan = sspelayanan.id_pelayanan', 'left')->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')->where('tb_tiket.id_pelayanan', $this->request->getVar('id_pelayanan'))->where('tb_tiket.status', 1)->where("date_part('year', tb_tiket.tgl_input)", $this->request->getVar('tahun'))->orderBy('tb_tiket.id_tiket', 'DESC')->countAllResults();
@@ -107,270 +116,325 @@ class Form extends BaseController {
         
         echo json_encode($response);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------------
+    // Dynamic Form (pelayanan dari DB)
+    public function dynamic($route)
+    {
+        $pelayananModel = new Pelayanan();
+        $pelayanan = $pelayananModel->where('route', $route)
+            ->where('active', 1)
+            ->first();
+
+        // kalau tidak ada / tidak aktif
+        if (!$pelayanan) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        // hanya tampilkan form dinamis jika sudah diset, dan punya field
+        $fieldModel = new PelayananField();
+        $fields = $fieldModel->where('id_pelayanan', $pelayanan['id_pelayanan'])
+            ->where('active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->findAll();
+
+        if (count($fields) === 0) {
+            // biar kompatibel: kalau pelayanan lama belum punya field dinamis
+            // lempar 404 agar tidak membuat form kosong
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $data = [
+            'title' => 'tiket',
+            'pelayanan' => $pelayanan,
+            'fields' => $fields,
+        ];
+        return view('form_tiket/dynamic', $data);
+    }
+
+    public function submit_dynamic($route)
+    {
+        $pelayananModel = new Pelayanan();
+        $pelayanan = $pelayananModel->where('route', $route)
+            ->where('active', 1)
+            ->first();
+        if (!$pelayanan) {
+            return $this->response->setJSON(['status' => 404, 'message' => 'Pelayanan tidak ditemukan']);
+        }
+
+        $fieldModel = new PelayananField();
+        $fields = $fieldModel->where('id_pelayanan', $pelayanan['id_pelayanan'])
+            ->where('active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->findAll();
+
+        if (count($fields) === 0) {
+            return $this->response->setJSON(['status' => 400, 'message' => 'Form pelayanan belum diatur oleh admin']);
+        }
+
+        // validasi required sederhana
+        foreach ($fields as $f) {
+            if ((int)$f['is_required'] === 1) {
+                if ($f['type'] === 'file') {
+                    $file = $this->request->getFile($f['field_key']);
+                    if (!$file || !$file->isValid()) {
+                        return $this->response->setJSON(['status' => 422, 'message' => 'Field wajib diisi: ' . $f['label']]);
+                    }
+                } else {
+                    $val = $this->request->getVar($f['field_key']);
+                    if ($val === null || trim((string)$val) === '') {
+                        return $this->response->setJSON(['status' => 422, 'message' => 'Field wajib diisi: ' . $f['label']]);
+                    }
+                }
+            }
+        }
+
+        $tgl = date('Y-m-d H:i:s');
+        $kode = $this->request->getVar('kode_tiket');
+        if (!$kode) {
+            $kode = 'DL-' . date('YmdHis');
+        }
+
+        $tiketModel = new Tiket();
+        $tiketModel->insert([
+            'kode_tiket' => $kode,
+            'tgl_input' => $tgl,
+            'id_pelayanan' => $pelayanan['id_pelayanan'],
+            'id_user' => session()->get('id_user'),
+            'status' => 0,
+        ]);
+        $id_tiket = $tiketModel->getInsertID();
+
+        $detailModel = new TiketDetail();
+        foreach ($fields as $f) {
+            $valueText = null;
+            $valueFile = null;
+
+            if ($f['type'] === 'file') {
+                $file = $this->request->getFile($f['field_key']);
+                if ($file && $file->isValid()) {
+                    $dir = './public/assets/berkas/dynamic/' . $route;
+                    if (!is_dir($dir)) {
+                        mkdir($dir, 0775, true);
+                    }
+                    $fileName = md5($id_tiket . '-' . $f['id_field']) . '.' . $file->guessExtension();
+                    $fileName = str_replace(' ', '', $fileName);
+                    $file->move($dir, $fileName);
+                    $valueFile = $fileName;
+                }
+            } else {
+                $valueText = $this->request->getVar($f['field_key']);
+            }
+
+            // simpan hanya kalau ada isi
+            if ($valueText !== null || $valueFile !== null) {
+                $detailModel->insert([
+                    'id_tiket' => $id_tiket,
+                    'id_field' => $f['id_field'],
+                    'value_text' => $valueText,
+                    'value_file' => $valueFile,
+                    'tgl_input' => $tgl,
+                ]);
+            }
+        }
+
+        // notifikasi/verifikasi tetap mengikuti mekanisme existing jika dibutuhkan.
+        // (untuk layanan dinamis baru: masih bisa dipetakan lewat verifikator_pelayanan)
+        $this->notification($pelayanan['id_pelayanan']);
+
+        $logModel = new Log_tiket();
+        $logModel->insert([
+            'id_tiket' => $id_tiket,
+            'id_user' => session()->get('id_user'),
+            'tgl_aktifitas' => $tgl,
+            'aktifitas' => 'Membuat tiket',
+            'color' => 'warning',
+            'icon' => 'fas fa-ticket-alt',
+        ]);
+
+        return $this->response->setJSON([
+            'status' => 200,
+            'message' => 'Tiket berhasil dibuat',
+            'id_tiket' => $id_tiket,
+            'kode_tiket' => $kode,
+            'route' => $route,
+        ]);
+    }
     // -----------------------------------------------------------------------------------------------------------------------
     // Zoom
-    public function zoom_page(){
+    public function zoom_page()
+    {
         $data = array(
             'title' => 'tiket'
         );
         return view('form_tiket/zoom',$data);
     }
-    public function add_zoom() {
-        $db        = \Config\Database::connect();
-        $tiketModel = new \App\Models\Tiket();
-        $zoomModel  = new \App\Models\Tiket_zoom();
-        $logModel   = new \App\Models\Log_tiket();
+    public function add_zoom()
+    {
+        $userModel = new Tiket();
 
         $tgl = date("Y-m-d H:i:s");
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode_zoom'),
+            'tgl_input'    => $tgl,
+            'id_pelayanan'    => 4,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
 
-        // ambil input
-        $mulai  = date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_mulai')));
-        $selesai = date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_akhir')));
+        $userModel->insert($data);
+        $id = $userModel->getInsertID();
 
-        $is_aula = $this->request->getVar('is_aula') == "1";
-        $is_alat = $this->request->getVar('is_alat') == "1";
 
-        $id_aula = $is_aula ? (int)$this->request->getVar('myAula') : null;
+        $dataBerkas = $this->request->getFile('berkas');
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
+        
+        $zoomModel = new Tiket_zoom();
 
-        // myAlat dari JS bisa jadi "1,2,3" atau array ["1","2"]
-        $alat_raw = $this->request->getVar('myAlat');
-        if (is_array($alat_raw)) {
-            $alat_ids = $alat_raw;
-        } else {
-            $alat_ids = explode(",", (string)$alat_raw);
-        }
-        $alat_ids = array_values(array_filter(array_map('trim', $alat_ids), fn($v) => $v !== ''));
+        $data = [
+            'id_tiket' => $id,
+            'nama_acara' => $this->request->getVar('acara'),
+            'tgl_awal' =>  date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_mulai'))),
+            'tgl_akhir' => date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_akhir'))),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'jenis_zoom' => $this->request->getVar('jenis'),
+            'meeting_id' => $this->request->getVar('meeting_id'),
+            'passcode' => $this->request->getVar('passcode'),
+            'tempat' => $this->request->getVar('tempat'),
+            'operator' => $this->request->getVar('is_operator'),
+            'berkas_pengantar' => $fileName,
+        ];
 
-        // =========================
-        // TRANSACTION BEGIN
-        // =========================
-        $db->transBegin();
+        $zoomModel->insert($data);
 
-        try {
-            // =========================
-            // 0) CEK CONFLICT DULU (SEBELUM INSERT APAPUN)
-            // =========================
+        
+        // NOTIFIKASI
+        $this->notification(4);
+        
 
-            // helper overlap: (mulai < selesai_baru) AND (selesai > mulai_baru)
-            // status tiket aktif: 0/1 (proses / disetujui). Tolak=2, batal=3 tidak dihitung bentrok.
-            if ($is_aula) {
-                $confAula = $db->query(
-                    "SELECT 1
-                    FROM tb_tiket_detail d
-                    JOIN tb_tiket t ON t.id_tiket = d.id_tiket
-                    WHERE d.tipe = 'aula'
-                    AND t.status IN (0,1)
-                    AND (d.detail->>'id_aula')::int = ?
-                    AND d.mulai < ?
-                    AND d.selesai > ?
-                    LIMIT 1",
-                    [$id_aula, $selesai, $mulai]
-                )->getRowArray();
+        $logModel = new Log_tiket();
+        $data = [
+            'id_tiket' => $id,
+            'id_user' => session()->get('id_user'),
+            'tgl_aktifitas' =>  $tgl,
+            'aktifitas' => "Membuat tiket",
+            'color' => "warning",
+            'icon' => "fas fa-ticket-alt",
+        ];
 
-                if ($confAula) {
-                    $db->transRollback();
-                    return $this->response->setStatusCode(409)->setJSON([
-                        'status' => 409,
-                        'message' => 'Aula sudah dibooking di waktu tersebut. Silakan pilih jadwal / aula lain.'
-                    ]);
-                }
-            }
-
-            if ($is_alat && count($alat_ids) > 0) {
-                // cek jika ada salah satu alat yang bentrok
-                // d.detail->'alat_ids' adalah array json
-                // cek intersect alat_ids (request) dengan alat_ids (existing)
-                $confAlat = $db->query(
-                    "SELECT 1
-                    FROM tb_tiket_detail d
-                    JOIN tb_tiket t ON t.id_tiket = d.id_tiket
-                    WHERE d.tipe = 'alat'
-                    AND t.status IN (0,1)
-                    AND d.mulai < ?
-                    AND d.selesai > ?
-                    AND EXISTS (
-                        SELECT 1
-                        FROM jsonb_array_elements_text(d.detail->'alat_ids') x(id_alat_txt)
-                        WHERE x.id_alat_txt = ANY(?)
-                    )
-                    LIMIT 1",
-                    [$selesai, $mulai, $alat_ids]
-                )->getRowArray();
-
-                if ($confAlat) {
-                    $db->transRollback();
-                    return $this->response->setStatusCode(409)->setJSON([
-                        'status' => 409,
-                        'message' => 'Ada perlengkapan/alat yang sudah dibooking di waktu tersebut. Silakan ubah pilihan alat atau jadwal.'
-                    ]);
-                }
-            }
-
-            // =========================
-            // 1) UPLOAD BERKAS (cek valid)
-            // =========================
-            $dataBerkas = $this->request->getFile('berkas');
-            if (!$dataBerkas || !$dataBerkas->isValid()) {
-                $db->transRollback();
-                return $this->response->setStatusCode(400)->setJSON([
-                    'status' => 400,
-                    'message' => 'File berkas tidak valid / tidak ada'
-                ]);
-            }
-
-            // =========================
-            // 2) INSERT TB_TIKET (sekali)
-            // =========================
-            $dataTiket = [
-                'kode_tiket'   => $this->request->getVar('kode_zoom'),
+        $logModel->insert($data);
+        
+        if($this->request->getVar('is_aula')=="1"){
+            $data = [
+                'kode_tiket' => $this->request->getVar('kode_aula'),
                 'tgl_input'    => $tgl,
-                'id_pelayanan' => 4,
-                'id_user'      => session()->get('id_user'),
-                'status'       => 0,
+                'id_pelayanan'    => 6,
+                'id_user'    => session()->get('id_user'),
+                'status'    => 0,
             ];
 
-            if (!$tiketModel->insert($dataTiket)) {
-                $db->transRollback();
-                return $this->response->setStatusCode(500)->setJSON([
-                    'status' => 500,
-                    'message' => 'Gagal insert tb_tiket',
-                    'errors' => $tiketModel->errors(),
-                ]);
-            }
-            $id_tiket = $tiketModel->getInsertID();
+            $userModel->insert($data);
+            $id = $userModel->getInsertID();
+            
+            $aulaModel = new Tiket_aula();
 
-            // simpan file setelah punya id_tiket
-            $fileName = md5($id_tiket) . "." . $dataBerkas->guessExtension();
-            $fileName = str_replace(" ", "", $fileName);
-            $dataBerkas->move('./public/assets/berkas/surat-pengantar', $fileName);
-
-            // =========================
-            // 3) INSERT ZOOM (sekali)
-            // =========================
-            $dataZoom = [
-                'id_pelayanan_zoom' => 4, // penting untuk t_db
-                'id_tiket' => $id_tiket,
+            $data = [
+                'id_tiket' => $id,
                 'nama_acara' => $this->request->getVar('acara'),
-                'tgl_awal' => $mulai,
-                'tgl_akhir' => $selesai,
+                'tgl_awal' =>  date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_mulai'))),
+                'tgl_akhir' => date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_akhir'))),
+                'id_aula' => $this->request->getVar('myAula'),
                 'nama_pic' => $this->request->getVar('nama_pic'),
                 'no_pic' => $this->request->getVar('nomor_pic'),
-                'jenis_zoom' => $this->request->getVar('jenis'),
-                'meeting_id' => $this->request->getVar('meeting_id'),
-                'passcode' => $this->request->getVar('passcode'),
-                'tempat' => $this->request->getVar('tempat'),
-                'operator' => $this->request->getVar('is_operator'),
                 'berkas_pengantar' => $fileName,
             ];
 
-            if (!$zoomModel->insert($dataZoom)) {
-                $db->transRollback();
-                return $this->response->setStatusCode(500)->setJSON([
-                    'status' => 500,
-                    'message' => 'Gagal insert tiket zoom',
-                    'errors' => $zoomModel->errors(),
-                ]);
-            }
+            $aulaModel->insert($data);
 
-            // log zoom
-            $logModel->insert([
-                'id_tiket' => $id_tiket,
+            $logModel = new Log_tiket();
+            $data = [
+                'id_tiket' => $id,
                 'id_user' => session()->get('id_user'),
-                'tgl_aktifitas' => $tgl,
-                'aktifitas' => "Membuat tiket zoom",
+                'tgl_aktifitas' =>  $tgl,
+                'aktifitas' => "Membuat tiket",
                 'color' => "warning",
-                'icon' => "fas fa-video",
-            ]);
+                'icon' => "fas fa-ticket-alt",
+            ];
 
-            // =========================
-            // 4) OPTIONAL: INSERT DETAIL AULA (tetap id_tiket yang sama)
-            // =========================
-            if ($is_aula) {
-                $db->table('tb_tiket_detail')->insert([
-                    'id_tiket' => $id_tiket,
-                    'tipe'     => 'aula',
-                    'judul'    => $this->request->getVar('acara'),
-                    'mulai'    => $mulai,
-                    'selesai'  => $selesai,
-                    'detail'   => json_encode([
-                        'id_aula' => $id_aula,
-                        'nama_pic' => $this->request->getVar('nama_pic'),
-                        'no_pic'   => $this->request->getVar('nomor_pic'),
-                        'berkas_pengantar' => $fileName,
-                    ]),
-                ]);
-
-                $logModel->insert([
-                    'id_tiket' => $id_tiket,
-                    'id_user' => session()->get('id_user'),
-                    'tgl_aktifitas' => $tgl,
-                    'aktifitas' => "Menambahkan peminjaman aula",
-                    'color' => "warning",
-                    'icon' => "fas fa-building",
-                ]);
-            }
-
-            // =========================
-            // 5) OPTIONAL: INSERT DETAIL ALAT (tetap id_tiket yang sama)
-            // =========================
-            if ($is_alat && count($alat_ids) > 0) {
-                $db->table('tb_tiket_detail')->insert([
-                    'id_tiket' => $id_tiket,
-                    'tipe'     => 'alat',
-                    'judul'    => $this->request->getVar('acara'),
-                    'mulai'    => $mulai,
-                    'selesai'  => $selesai,
-                    'detail'   => json_encode([
-                        'alat_ids' => $alat_ids,
-                        'nama_pic' => $this->request->getVar('nama_pic'),
-                        'no_pic'   => $this->request->getVar('nomor_pic'),
-                        'berkas_pengantar' => $fileName,
-                    ]),
-                ]);
-
-                $logModel->insert([
-                    'id_tiket' => $id_tiket,
-                    'id_user' => session()->get('id_user'),
-                    'tgl_aktifitas' => $tgl,
-                    'aktifitas' => "Menambahkan peminjaman peralatan",
-                    'color' => "warning",
-                    'icon' => "fas fa-tools",
-                ]);
-            }
-
-            // =========================
-            // COMMIT
-            // =========================
-            if ($db->transStatus() === false) {
-                $db->transRollback();
-                return $this->response->setStatusCode(500)->setJSON([
-                    'status' => 500,
-                    'message' => 'Transaksi gagal (transStatus false)'
-                ]);
-            }
-
-            $db->transCommit();
-
-            // notif belakangan (kalau notif gagal, tidak merusak transaksi DB)
-            $this->notification(4);
-            if ($is_aula) $this->notification(6);
-            if ($is_alat) $this->notification(13);
-
-            return $this->response->setJSON([
-                'status' => 200,
-                'message' => "Tiket Berhasil Dibuat.",
-                'id_tiket' => $id_tiket
-            ]);
-        } catch (\Throwable $e) {
-            $db->transRollback();
-            return $this->response->setStatusCode(500)->setJSON([
-                'status' => 500,
-                'message' => 'Terjadi error server: ' . $e->getMessage()
-            ]);
+            $logModel->insert($data);
+            
+            // NOTIFIKASI
+            $this->notification(6);
+            
         }
+
+        if($this->request->getVar('is_alat')=="1"){
+            $data = [
+                'kode_tiket' => $this->request->getVar('kode_alat'),
+                'tgl_input'    => $tgl,
+                'id_pelayanan'    => 13,
+                'id_user'    => session()->get('id_user'),
+                'status'    => 0,
+            ];
+
+            $userModel->insert($data);
+            $id = $userModel->getInsertID();
+            
+            $alatModel = new Tiket_alat();
+
+            $data = [
+                'id_tiket' => $id,
+                'nama_acara' => $this->request->getVar('acara'),
+                'tgl_awal' =>  date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_mulai'))),
+                'tgl_akhir' => date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_akhir'))),
+                'nama_pic' => $this->request->getVar('nama_pic'),
+                'no_pic' => $this->request->getVar('nomor_pic'),
+                'berkas_pengantar' => $fileName,
+            ];
+
+            $alatModel->insert($data);
+
+            $listModel = new Tiket_alat_list();
+            $array_pelayanan = explode(",",$this->request->getVar('myAlat'));
+            for($x =0;$x<count($array_pelayanan);$x++){
+                $data = [
+                    'id_pelayanan_alat' => $id,
+                    'id_alat'    => $array_pelayanan[$x],
+                ];
+
+                $listModel->insert($data);
+            }
+
+            $logModel = new Log_tiket();
+            $data = [
+                'id_tiket' => $id,
+                'id_user' => session()->get('id_user'),
+                'tgl_aktifitas' =>  $tgl,
+                'aktifitas' => "Membuat tiket",
+                'color' => "warning",
+                'icon' => "fas fa-ticket-alt",
+            ];
+
+            $logModel->insert($data);
+            
+            // NOTIFIKASI
+            $this->notification(13);
+        
+        }
+
+        $response = [
+            'status' => 200,
+            'message' => "Tiket Berhasil Dibuat."
+        ];
+        
+        echo json_encode($response);
     }
 
-    public function add_zoom_calendar() {
+    public function add_zoom_calendar()
+    {
         $db = \Config\Database::connect();
         // $builder = $db->table('tb_tiket_aula')->select('tb_tiket.id_tiket, tb_tiket_aula.tgl_awal as start, tb_tiket_aula.tgl_akhir as end, tb_tiket_aula.nama_acara as description, ssopd.akronim_opd as title, tb_tiket.status, tb_tiket.status as color, ssaula.nama_aula')->join('tb_tiket', 'tb_tiket.id_tiket = tb_tiket_aula.id_tiket', 'left')->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')->join('ssaula', 'ssaula.id_aula = tb_tiket_aula.id_aula', 'left')->where("date_part('month', tb_tiket_aula.tgl_awal)", date("m", strtotime($this->request->getVar('tgl'))))->where("date_part('year', tb_tiket_aula.tgl_awal)", date("Y", strtotime($this->request->getVar('tgl'))))->get()->getResult();
         
@@ -413,60 +477,25 @@ class Form extends BaseController {
     // -----------------------------------------------------------------------------------------------------------------------
     // AULA
 
-    public function aula_page(){
+    public function aula_page()
+    {
         $data = array(
             'title' => 'tiket'
         );
         return view('form_tiket/aula',$data);
     }
 
-    public function add_aula(){
-        // ==== ambil input & normalisasi tanggal ====
-        $idAula   = $this->request->getVar('myAula');
-        $mulai    = date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_mulai')));
-        $selesai  = date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_akhir')));
-
-        // validasi sederhana
-        if (strtotime($selesai) <= strtotime($mulai)) {
-            return $this->response->setJSON([
-                'status'  => 422,
-                'message' => 'Tanggal/jam selesai harus lebih besar dari mulai.'
-            ]);
-        }
-
-        // ==== CEK TABRAKAN (overlap) ====
-        // overlap jika: existing_mulai < request_selesai AND existing_selesai > request_mulai
-        $db = \Config\Database::connect();
-        $builder = $db->table('tb_tiket_aula a');
-        $builder->select('a.id_tiket');
-        $builder->join('tb_tiket t', 't.id_tiket = a.id_tiket');
-        $builder->where('a.id_aula', $idAula);
-        $builder->where('a.tgl_awal <', $selesai);
-        $builder->where('a.tgl_akhir >', $mulai);
-
-        // blokir hanya tiket yang masih "mengunci jadwal"
-        // asumsi umum: 0=menunggu, 1=disetujui, 2=ditolak (sesuaikan kalau beda)
-        $builder->whereIn('t.status', [0, 1]);
-
-        $bentrok = $builder->countAllResults();
-
-        if ($bentrok > 0) {
-            return $this->response->setJSON([
-                'status'  => 409,
-                'message' => 'Aula sudah dipakai / ada pengajuan lain di tanggal dan jam tersebut.'
-            ]);
-        }
-
-        // ==== kalau aman, lanjut kode kamu yang lama ====
+    public function add_aula()
+    {
         $userModel = new Tiket();
 
         $tgl = date("Y-m-d H:i:s");
         $data = [
             'kode_tiket' => $this->request->getVar('kode'),
             'tgl_input'    => $tgl,
-            'id_pelayanan'  => 6,
-            'id_user'       => session()->get('id_user'),
-            'status'        => 0,
+            'id_pelayanan'    => 6,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
         ];
 
         $userModel->insert($data);
@@ -478,13 +507,12 @@ class Form extends BaseController {
         $fileName = md5($id).".".$dataBerkas->guessExtension();
         $fileName = str_replace(" ","",$fileName);
         $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
-
         $data = [
             'id_tiket' => $id,
             'nama_acara' => $this->request->getVar('acara'),
-            'tgl_awal' => $mulai,
-            'tgl_akhir' => $selesai,
-            'id_aula' => $idAula,
+            'tgl_awal' =>  date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_mulai'))),
+            'tgl_akhir' => date("Y-m-d H:i:s", strtotime($this->request->getVar('tgl_akhir'))),
+            'id_aula' => $this->request->getVar('myAula'),
             'nama_pic' => $this->request->getVar('nama_pic'),
             'no_pic' => $this->request->getVar('nomor_pic'),
             'berkas_pengantar' => $fileName,
@@ -516,7 +544,8 @@ class Form extends BaseController {
         echo json_encode($response);
     }
 
-    public function add_aula_calendar(){
+    public function add_aula_calendar()
+    {
         $db = \Config\Database::connect();
         // $builder = $db->table('tb_tiket_aula')->join('tb_tiket', 'tb_tiket.id_tiket = tb_tiket_aula.id_tiket', 'left')->get()->getResult();
         $builder = $db->table('tb_tiket_aula')->select('tb_tiket.id_tiket, tb_tiket_aula.tgl_awal as start, tb_tiket_aula.tgl_akhir as end, tb_tiket_aula.nama_acara as description, ssopd.akronim_opd as title, tb_tiket.status, tb_tiket.status as color, ssaula.nama_aula')->join('tb_tiket', 'tb_tiket.id_tiket = tb_tiket_aula.id_tiket', 'left')->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')->join('ssaula', 'ssaula.id_aula = tb_tiket_aula.id_aula', 'left')->where("date_part('month', tb_tiket_aula.tgl_awal)", date("m", strtotime($this->request->getVar('tgl'))))->where("date_part('year', tb_tiket_aula.tgl_awal)", date("Y", strtotime($this->request->getVar('tgl'))))->get()->getResult();
@@ -543,77 +572,75 @@ class Form extends BaseController {
 
     // -----------------------------------------------------------------------------------------------------------------------
     // Subdomain
-    public function subdomain_page(){
+    public function subdomain_page()
+    {
         $data = array(
             'title' => 'tiket'
         );
         return view('form_tiket/sub-domain',$data);
     }
 
-    public function add_subdomain() {
-        $tiketModel = new Tiket();
+    public function add_subdomain()
+    {
+        $userModel = new Tiket();
+
         $tgl = date("Y-m-d H:i:s");
-
-        // 1) Insert header tiket
-        $tiketModel->insert([
-            'kode_tiket'   => $this->request->getVar('kode'),
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode'),
             'tgl_input'    => $tgl,
-            'id_pelayanan' => 5,
-            'id_user'      => session()->get('id_user'),
-            'status'       => 0,
-        ]);
+            'id_pelayanan'    => 5,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
 
-        $id = $tiketModel->getInsertID();
+        $userModel->insert($data);
+        $id = $userModel->getInsertID();
 
-        // 2) Upload berkas
+        $subModel = new Tiket_subdomain();
+
         $dataBerkas = $this->request->getFile('berkas');
-        $fileName = md5($id) . "." . $dataBerkas->guessExtension();
-        $fileName = str_replace(" ", "", $fileName);
-        $dataBerkas->move('./public/assets/berkas/surat-pengantar', $fileName);
-
-        // 3) Insert detail subdomain langsung ke tb_tiket_detail (JSONB)
-        $db = \Config\Database::connect();
-        $builder = $db->table('tb_tiket_detail');
-
-        $builder->insert([
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
+        $data = [
             'id_tiket' => $id,
-            'tipe'     => 'subdomain',
-            'judul'    => $this->request->getVar('subdomain'), // nama_subdomain disimpan di judul
-            'mulai'    => null,
-            'selesai'  => null,
-            'detail'   => json_encode([
-                'nama_subdomain'    => $this->request->getVar('subdomain'),
-                'ip_publik'         => $this->request->getVar('ip'),
-                'nama_pic'          => $this->request->getVar('nama_pic'),
-                'no_pic'            => $this->request->getVar('nomor_pic'),
-                'berkas_pengantar'  => $fileName,
-            ]),
-        ]);
+            'nama_subdomain' => $this->request->getVar('subdomain'),
+            'ip_publik' => $this->request->getVar('ip'),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'berkas_pengantar' => $fileName,
+        ];
 
-        // 4) Log tiket
+        $subModel->insert($data);
+
         $logModel = new Log_tiket();
-        $logModel->insert([
+        $data = [
             'id_tiket' => $id,
             'id_user' => session()->get('id_user'),
-            'tgl_aktifitas' => $tgl,
+            'tgl_aktifitas' =>  $tgl,
             'aktifitas' => "Membuat tiket",
             'color' => "warning",
             'icon' => "fas fa-ticket-alt",
-        ]);
+        ];
+
+        $logModel->insert($data);
+
+        $response = [
+            'status' => 200,
+            'message' => "Tiket Berhasil Dibuat."
+        ];
 
         // NOTIFIKASI
         $this->notification(5);
-
-        return $this->response->setJSON([
-            'status' => 200,
-            'message' => "Tiket Berhasil Dibuat."
-        ]);
+        
+        echo json_encode($response);
     }
 
     // -----------------------------------------------------------------------------------------------------------------------
     // Upload Dokumen
     
-    public function upload_page() {
+    public function upload_page()
+    {
         $data = array(
             'title' => 'tiket'
         );
@@ -623,325 +650,284 @@ class Form extends BaseController {
     public function add_upload()
     {
         $userModel = new Tiket();
+
         $tgl = date("Y-m-d H:i:s");
-
-        // 1) Header tiket
-        $userModel->insert([
-            'kode_tiket'   => $this->request->getVar('kode'),
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode'),
             'tgl_input'    => $tgl,
-            'id_pelayanan' => 7,
-            'id_user'      => session()->get('id_user'),
-            'status'       => 0,
-        ]);
+            'id_pelayanan'    => 7,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
 
+        $userModel->insert($data);
         $id = $userModel->getInsertID();
 
-        // 2) Upload surat pengantar
-        $berkas = $this->request->getFile('berkas');
-        if (!$berkas || !$berkas->isValid()) {
-            return $this->response->setJSON([
-                'status'  => 422,
-                'message' => 'Berkas surat pengantar wajib diupload.'
-            ]);
-        }
+        $subModel = new Tiket_upload();
 
-        $filePengantar = md5($id . '_pengantar') . "." . $berkas->guessExtension();
-        $filePengantar = str_replace(" ", "", $filePengantar);
-        $berkas->move('./public/assets/berkas/surat-pengantar', $filePengantar);
-
-        // 3) Upload dokumen utama
-        $dokumen = $this->request->getFile('dokumen');
-        if (!$dokumen || !$dokumen->isValid()) {
-            return $this->response->setJSON([
-                'status'  => 422,
-                'message' => 'Dokumen yang akan diupload wajib diupload.'
-            ]);
-        }
-
-        $fileDokumen = md5($id . '_dokumen') . "." . $dokumen->guessExtension();
-        $fileDokumen = str_replace(" ", "", $fileDokumen);
-        $dokumen->move('./public/assets/berkas/upload', $fileDokumen);
-
-        // 4) Insert detail ke tb_tiket_detail (JSONB)
-        $db = \Config\Database::connect();
-        $db->table('tb_tiket_detail')->insert([
-            'id_tiket' => $id,
-            'tipe'     => 'upload',
-            'judul'    => $this->request->getVar('jenis') ?? 'Upload Dokumen',
-            'mulai'    => null,
-            'selesai'  => null,
-            'detail'   => json_encode([
-                'edisi'             => $this->request->getVar('edisi'),
-                'jenis_dokumen'     => $this->request->getVar('jenis'),
-                'nama_pic'          => $this->request->getVar('nama_pic'),
-                'no_pic'            => $this->request->getVar('nomor_pic'),
-                'berkas_pengantar'  => $filePengantar,
-                'berkas_upload'     => $fileDokumen,
-            ]),
-        ]);
-
-        // 5) Log
-        $logModel = new Log_tiket();
-        $logModel->insert([
-            'id_tiket' => $id,
-            'id_user' => session()->get('id_user'),
-            'tgl_aktifitas' => $tgl,
-            'aktifitas' => "Membuat tiket",
-            'color' => "warning",
-            'icon' => "fas fa-ticket-alt",
-        ]);
-
-        // NOTIFIKASI
-        $this->notification(7);
-
-        return $this->response->setJSON([
-            'status'  => 200,
-            'message' => "Tiket Berhasil Dibuat."
-        ]);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------------
-    // Hosting
-    
-    public function hosting_page(){
-        $data = array(
-            'title' => 'tiket'
-        );
-        return view('form_tiket/hosting',$data);
-    }
-
-    public function add_hosting(){
-        $tiketModel = new Tiket();
-        $tgl = date("Y-m-d H:i:s");
-
-        // 1) insert header tiket
-        $tiketModel->insert([
-            'kode_tiket'   => $this->request->getVar('kode'),
-            'tgl_input'    => $tgl,
-            'id_pelayanan' => 8,
-            'id_user'      => session()->get('id_user'),
-            'status'       => 0,
-        ]);
-        $id = $tiketModel->getInsertID();
-
-        // 2) upload berkas
         $dataBerkas = $this->request->getFile('berkas');
-        $fileName = md5($id) . "." . $dataBerkas->guessExtension();
-        $fileName = str_replace(" ", "", $fileName);
-        $dataBerkas->move('./public/assets/berkas/surat-pengantar', $fileName);
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
 
-        // 3) simpan detail hosting ke tb_tiket_detail (jsonb)
-        $db = \Config\Database::connect();
-        $db->table('tb_tiket_detail')->insert([
+        $dataBerkass = $this->request->getFile('dokumen');
+        $fileNames = md5($id).".".$dataBerkass->guessExtension();
+        $fileNames = str_replace(" ","",$fileNames);
+        $dataBerkass->move('./public/assets/berkas/upload',$fileNames);
+
+        $data = [
             'id_tiket' => $id,
-            'tipe'     => 'hosting',
-            'judul'    => $this->request->getVar('nama'), // nama aplikasi jadi judul
-            'mulai'    => null,
-            'selesai'  => null,
-            'detail'   => json_encode([
-                'nama_aplikasi'     => $this->request->getVar('nama'),
-                'deskripsi'         => $this->request->getVar('deskripsi'),
-                'spesifikasi'       => $this->request->getVar('spesifikasi'),
-                'nama_pic'          => $this->request->getVar('nama_pic'),
-                'no_pic'            => $this->request->getVar('nomor_pic'),
-                'berkas_pengantar'  => $fileName,
+            'edisi' => $this->request->getVar('edisi'),
+            'jenis_dokumen' => $this->request->getVar('jenis'),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'berkas_pengantar' => $fileName,
+            'berkas_upload' => $fileNames,
+        ];
 
-                // biar view detail kamu tetap aman walau belum ada inputnya
-                'port'              => $this->request->getVar('port') ?? '',
-                'db_access'         => $this->request->getVar('db_access') ?? '',
-                'server_access'     => $this->request->getVar('server_access') ?? '',
-            ]),
-        ]);
+        $subModel->insert($data);
 
-        // 4) log
         $logModel = new Log_tiket();
-        $logModel->insert([
-            'id_tiket' => $id,
-            'id_user' => session()->get('id_user'),
-            'tgl_aktifitas' => $tgl,
-            'aktifitas' => "Membuat tiket",
-            'color' => "warning",
-            'icon' => "fas fa-ticket-alt",
-        ]);
-
-        // NOTIFIKASI
-        $this->notification(8);
-
-        return $this->response->setJSON([
-            'status' => 200,
-            'message' => "Tiket Berhasil Dibuat."
-        ]);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------------
-    // TTE
-    public function tte_page(){
-        $data = array(
-            'title' => 'tiket'
-        );
-        return view('form_tiket/tte',$data);
-    }
-
-    public function add_tte(){
-        $tiketModel = new Tiket();
-        $tgl = date("Y-m-d H:i:s");
-
-        // 1) Insert header tiket
-        $tiketModel->insert([
-            'kode_tiket'   => $this->request->getVar('kode'),
-            'tgl_input'    => $tgl,
-            'id_pelayanan' => 9,
-            'id_user'      => session()->get('id_user'),
-            'status'       => 0,
-        ]);
-
-        $id = $tiketModel->getInsertID();
-
-        // 2) Upload surat pengantar
-        $berkas = $this->request->getFile('berkas');
-        if (!$berkas || !$berkas->isValid()) {
-            return $this->response->setJSON([
-                'status' => 422,
-                'message' => 'Berkas surat pengantar wajib diupload.'
-            ]);
-        }
-        $filePengantar = md5($id . '_pengantar') . "." . $berkas->guessExtension();
-        $filePengantar = str_replace(" ", "", $filePengantar);
-        $berkas->move('./public/assets/berkas/surat-pengantar', $filePengantar);
-
-        // 3) Upload KTP
-        $ktp = $this->request->getFile('ktp');
-        if (!$ktp || !$ktp->isValid()) {
-            return $this->response->setJSON([
-                'status' => 422,
-                'message' => 'Berkas KTP wajib diupload.'
-            ]);
-        }
-        $fileKtp = md5($id . '_ktp') . "." . $ktp->guessExtension();
-        $fileKtp = str_replace(" ", "", $fileKtp);
-        $ktp->move('./public/assets/berkas/ktp', $fileKtp);
-
-        // 4) Insert detail TTE ke tb_tiket_detail (JSONB)
-        $db = \Config\Database::connect();
-        $db->table('tb_tiket_detail')->insert([
-            'id_tiket' => $id,
-            'tipe'     => 'tte',
-            // judul bebas: biar enak dibaca di list
-            'judul'    => $this->request->getVar('nama') ?? 'Pengajuan TTE',
-            'mulai'    => null,
-            'selesai'  => null,
-            'detail'   => json_encode([
-                'jenis_layanan'     => $this->request->getVar('jenis'),
-                'nama'              => $this->request->getVar('nama'),
-                'jabatan'           => $this->request->getVar('jabatan'),
-                'nip'               => $this->request->getVar('nip'),
-                'nik'               => $this->request->getVar('nik'),
-                'nama_pic'          => $this->request->getVar('nama_pic'),
-                'no_pic'            => $this->request->getVar('nomor_pic'),
-                'berkas_pengantar'  => $filePengantar,
-                'berkas_ktp'        => $fileKtp,
-            ]),
-        ]);
-
-        // 5) Log
-        $logModel = new Log_tiket();
-        $logModel->insert([
-            'id_tiket' => $id,
-            'id_user' => session()->get('id_user'),
-            'tgl_aktifitas' => $tgl,
-            'aktifitas' => "Membuat tiket",
-            'color' => "warning",
-            'icon' => "fas fa-ticket-alt",
-        ]);
-
-        // NOTIFIKASI
-        $this->notification(9);
-
-        return $this->response->setJSON([
-            'status' => 200,
-            'message' => "Tiket Berhasil Dibuat."
-        ]);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------------
-    // APP
-    public function app_page(){
-        $data = array(
-            'title' => 'tiket'
-        );
-        return view('form_tiket/app',$data);
-    }
-
-    public function add_app(){
-        $userModel = new Tiket();
-        $tgl = date("Y-m-d H:i:s");
-
-        // 1) Header tiket
-        $userModel->insert([
-            'kode_tiket'   => $this->request->getVar('kode'),
-            'tgl_input'    => $tgl,
-            'id_pelayanan' => 10,
-            'id_user'      => session()->get('id_user'),
-            'status'       => 0,
-        ]);
-        $id = $userModel->getInsertID();
-
-        // 2) Upload surat pengantar
-        $dataBerkas = $this->request->getFile('berkas');
-        if (!$dataBerkas || !$dataBerkas->isValid()) {
-            return $this->response->setJSON([
-                'status'  => 422,
-                'message' => 'Berkas surat pengantar wajib diupload.'
-            ]);
-        }
-
-        $fileName = md5($id . '_pengantar') . "." . $dataBerkas->guessExtension();
-        $fileName = str_replace(" ", "", $fileName);
-        $dataBerkas->move('./public/assets/berkas/surat-pengantar', $fileName);
-
-        // 3) Insert detail ke tb_tiket_detail (JSONB)
-        $db = \Config\Database::connect();
-        $db->table('tb_tiket_detail')->insert([
-            'id_tiket' => $id,
-            'tipe'     => 'app', // konsisten untuk detail page
-            'judul'    => $this->request->getVar('nama') ?? 'Pendampingan Aplikasi',
-            'mulai'    => null,
-            'selesai'  => null,
-            'detail'   => json_encode([
-                'nama_aplikasi'       => $this->request->getVar('nama'),
-                'deskripsi_aplikasi'  => $this->request->getVar('deskripsi'),
-                'tgl'                 => $this->request->getVar('tgl'),
-                'tempat'              => $this->request->getVar('tempat'),
-                'agenda'              => $this->request->getVar('agenda'),
-                'nama_pic'            => $this->request->getVar('nama_pic'),
-                'no_pic'              => $this->request->getVar('nomor_pic'),
-                'berkas_pengantar'    => $fileName,
-            ]),
-        ]);
-
-        // 4) Log
-        $logModel = new Log_tiket();
-        $logModel->insert([
+        $data = [
             'id_tiket' => $id,
             'id_user' => session()->get('id_user'),
             'tgl_aktifitas' =>  $tgl,
             'aktifitas' => "Membuat tiket",
             'color' => "warning",
             'icon' => "fas fa-ticket-alt",
-        ]);
+        ];
 
+        $logModel->insert($data);
+
+        $response = [
+            'status' => 200,
+            'message' => "Tiket Berhasil Dibuat."
+        ];
+        
+        // NOTIFIKASI
+        $this->notification(7);
+        
+        echo json_encode($response);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------------
+    // Hosting
+    
+    public function hosting_page()
+    {
+        $data = array(
+            'title' => 'tiket'
+        );
+        return view('form_tiket/hosting',$data);
+    }
+
+    public function add_hosting()
+    {
+        $userModel = new Tiket();
+
+        $tgl = date("Y-m-d H:i:s");
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode'),
+            'tgl_input'    => $tgl,
+            'id_pelayanan'    => 8,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
+
+        $userModel->insert($data);
+        $id = $userModel->getInsertID();
+
+        $subModel = new Tiket_hosting();
+
+        $dataBerkas = $this->request->getFile('berkas');
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
+
+        $data = [
+            'id_tiket' => $id,
+            'nama_aplikasi' => $this->request->getVar('nama'),
+            'deskripsi' => $this->request->getVar('deskripsi'),
+            'spesifikasi' => $this->request->getVar('spesifikasi'),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'berkas_pengantar' => $fileName,
+        ];
+
+        $subModel->insert($data);
+
+        $logModel = new Log_tiket();
+        $data = [
+            'id_tiket' => $id,
+            'id_user' => session()->get('id_user'),
+            'tgl_aktifitas' =>  $tgl,
+            'aktifitas' => "Membuat tiket",
+            'color' => "warning",
+            'icon' => "fas fa-ticket-alt",
+        ];
+
+        $logModel->insert($data);
+
+        $response = [
+            'status' => 200,
+            'message' => "Tiket Berhasil Dibuat."
+        ];
+
+        // NOTIFIKASI
+        $this->notification(8);
+        
+        echo json_encode($response);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------------
+    // TTE
+    public function tte_page()
+    {
+        $data = array(
+            'title' => 'tiket'
+        );
+        return view('form_tiket/tte',$data);
+    }
+
+    public function add_tte()
+    {
+        $userModel = new Tiket();
+
+        $tgl = date("Y-m-d H:i:s");
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode'),
+            'tgl_input'    => $tgl,
+            'id_pelayanan'    => 9,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
+
+        $userModel->insert($data);
+        $id = $userModel->getInsertID();
+
+        $subModel = new Tiket_tte();
+
+        $dataBerkas = $this->request->getFile('berkas');
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
+
+        $dataBerkass = $this->request->getFile('ktp');
+        $fileNames = md5($id).".".$dataBerkass->guessExtension();
+        $fileNames = str_replace(" ","",$fileNames);
+        $dataBerkass->move('./public/assets/berkas/ktp',$fileNames);
+
+        $data = [
+            'id_tiket' => $id,
+            'jenis_layanan' => $this->request->getVar('jenis'),
+            'nama' => $this->request->getVar('nama'),
+            'jabatan' => $this->request->getVar('jabatan'),
+            'nip' => $this->request->getVar('nip'),
+            'nik' => $this->request->getVar('nik'),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'berkas_pengantar' => $fileName,
+            'berkas_ktp' => $fileNames,
+        ];
+
+        $subModel->insert($data);
+
+        $logModel = new Log_tiket();
+        $data = [
+            'id_tiket' => $id,
+            'id_user' => session()->get('id_user'),
+            'tgl_aktifitas' =>  $tgl,
+            'aktifitas' => "Membuat tiket",
+            'color' => "warning",
+            'icon' => "fas fa-ticket-alt",
+        ];
+
+        $logModel->insert($data);
+
+        $response = [
+            'status' => 200,
+            'message' => "Tiket Berhasil Dibuat."
+        ];
+        
+        // NOTIFIKASI
+        $this->notification(9);
+        
+        echo json_encode($response);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------------
+    // APP
+    public function app_page()
+    {
+        $data = array(
+            'title' => 'tiket'
+        );
+        return view('form_tiket/app',$data);
+    }
+
+    public function add_app()
+    {
+        $userModel = new Tiket();
+
+        $tgl = date("Y-m-d H:i:s");
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode'),
+            'tgl_input'    => $tgl,
+            'id_pelayanan'    => 10,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
+
+        $userModel->insert($data);
+        $id = $userModel->getInsertID();
+
+        $subModel = new Tiket_app();
+
+        $dataBerkas = $this->request->getFile('berkas');
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
+
+        $data = [
+            'id_tiket' => $id,
+            'nama_aplikasi' => $this->request->getVar('nama'),
+            'deskripsi_aplikasi' => $this->request->getVar('deskripsi'),
+            'tgl' => $this->request->getVar('tgl'),
+            'tempat' => $this->request->getVar('tempat'),
+            'agenda' => $this->request->getVar('agenda'),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'berkas_pengantar' => $fileName,
+        ];
+
+        $subModel->insert($data);
+
+        $logModel = new Log_tiket();
+        $data = [
+            'id_tiket' => $id,
+            'id_user' => session()->get('id_user'),
+            'tgl_aktifitas' =>  $tgl,
+            'aktifitas' => "Membuat tiket",
+            'color' => "warning",
+            'icon' => "fas fa-ticket-alt",
+        ];
+
+        $logModel->insert($data);
+
+        $response = [
+            'status' => 200,
+            'message' => "Tiket Berhasil Dibuat."
+        ];
+        
         // NOTIFIKASI
         $this->notification(10);
 
-        return $this->response->setJSON([
-            'status'  => 200,
-            'message' => "Tiket Berhasil Dibuat."
-        ]);
+        echo json_encode($response);
     }
 
     // -----------------------------------------------------------------------------------------------------------------------
     // Jaringan jaringan
-    public function jaringan_page() 
+    public function jaringan_page()
     {
         $data = array(
             'title' => 'tiket'
@@ -949,86 +935,78 @@ class Form extends BaseController {
         return view('form_tiket/jaringan',$data);
     }
 
-    public function add_jaringan() {
+    public function add_jaringan()
+    {
         $userModel = new Tiket();
+
         $tgl = date("Y-m-d H:i:s");
-
-        // 1) Header tiket
-        $userModel->insert([
-            'kode_tiket'   => $this->request->getVar('kode'),
+        $data = [
+            'kode_tiket' => $this->request->getVar('kode'),
             'tgl_input'    => $tgl,
-            'id_pelayanan' => 11,
-            'id_user'      => session()->get('id_user'),
-            'status'       => 0,
-        ]);
+            'id_pelayanan'    => 11,
+            'id_user'    => session()->get('id_user'),
+            'status'    => 0,
+        ];
 
+        $userModel->insert($data);
         $id = $userModel->getInsertID();
 
-        // 2) Upload surat pengantar
-        $berkas = $this->request->getFile('berkas');
-        if (!$berkas || !$berkas->isValid()) {
-            return $this->response->setJSON([
-                'status' => 422,
-                'message' => 'Berkas surat pengantar wajib diupload.'
-            ]);
-        }
+        $subModel = new Tiket_jaringan();
 
-        $filePengantar = md5($id . '_pengantar') . "." . $berkas->guessExtension();
-        $filePengantar = str_replace(" ","",$filePengantar);
-        $berkas->move('./public/assets/berkas/surat-pengantar', $filePengantar);
+        $dataBerkas = $this->request->getFile('berkas');
+        $fileName = md5($id).".".$dataBerkas->guessExtension();
+        $fileName = str_replace(" ","",$fileName);
+        $dataBerkas->move('./public/assets/berkas/surat-pengantar',$fileName);
 
-        // 3) Upload dokumentasi (bisa banyak)
-        $dokumentasiList = [];
-
-        for ($x = 0; $x < (int)$this->request->getVar('jumlah_dokumentasi'); $x++) {
-
-            $dokumen = 'dokumentasi_' . $x;
-            $file = $this->request->getFile($dokumen);
-
-            if ($file && $file->isValid()) {
-                $fileName = md5($id . '_dokumentasi_' . $x) . "." . $file->guessExtension();
-                $fileName = str_replace(" ","",$fileName);
-                $file->move('./public/assets/berkas/dokumentasi', $fileName);
-
-                $dokumentasiList[] = $fileName;
-            }
-        }
-
-        // 4) Insert ke tb_tiket_detail
-        $db = \Config\Database::connect();
-        $db->table('tb_tiket_detail')->insert([
+        $data = [
             'id_tiket' => $id,
-            'tipe'     => 'jaringan',
-            'judul'    => 'Pengaduan Jaringan',
-            'mulai'    => null,
-            'selesai'  => null,
-            'detail'   => json_encode([
-                'tgl_kejadian'      => $this->request->getVar('tgl'),
-                'keluhan'           => $this->request->getVar('keluhan'),
-                'nama_pic'          => $this->request->getVar('nama_pic'),
-                'no_pic'            => $this->request->getVar('nomor_pic'),
-                'berkas_pengantar'  => $filePengantar,
-                'dokumentasi'       => $dokumentasiList,
-            ]),
-        ]);
+            'tgl_kejadian' => $this->request->getVar('tgl'),
+            'keluhan' => $this->request->getVar('keluhan'),
+            'nama_pic' => $this->request->getVar('nama_pic'),
+            'no_pic' => $this->request->getVar('nomor_pic'),
+            'berkas_pengantar' => $fileName,
+        ];
 
-        // 5) Log
+        $subModel->insert($data);
+        $id_pelayanan = $subModel->getInsertID();
+        
+        for ($x = 0; $x < (int) $this->request->getVar('jumlah_dokumentasi'); $x++) {
+            $dokumen = 'dokumentasi_'.(string) $x;
+            $dataBerkass = $this->request->getFile($dokumen); 
+            $fileNames = md5($id_pelayanan).'_dokumentasi_'.(string) $x.".".$dataBerkass->guessExtension();
+            $fileNames = str_replace(" ","",$fileNames);
+            $dataBerkass->move('./public/assets/berkas/dokumentasi',$fileNames);
+
+            $dokumentasiModel = new Tiket_jaringan_foto();
+            $data = [
+                'id_pelayanan_jaringan' => $id_pelayanan,
+                'berkas_foto' => $fileNames,
+            ];
+
+            $dokumentasiModel->insert($data);
+        }
+
         $logModel = new Log_tiket();
-        $logModel->insert([
+        $data = [
             'id_tiket' => $id,
             'id_user' => session()->get('id_user'),
             'tgl_aktifitas' =>  $tgl,
             'aktifitas' => "Membuat tiket",
             'color' => "warning",
             'icon' => "fas fa-ticket-alt",
-        ]);
+        ];
 
-        $this->notification(11);
+        $logModel->insert($data);
 
-        return $this->response->setJSON([
+        $response = [
             'status' => 200,
             'message' => "Tiket Berhasil Dibuat."
-        ]);
+        ];
+
+        // NOTIFIKASI
+        $this->notification(11);
+        
+        echo json_encode($response);
     }
 
     // -----------------------------------------------------------------------------------------------------------------------

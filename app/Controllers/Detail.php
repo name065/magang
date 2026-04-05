@@ -20,122 +20,19 @@ use App\Models\Aula;
 use App\Models\Log_tiket;
 
 use App\Models\Tiket_magang;
+use App\Models\Pelayanan;
+use App\Models\PelayananField;
+use App\Models\TiketDetail;
 
-class Detail extends BaseController{
-  public function __construct(){
+class Detail extends BaseController
+{
+  public function __construct()
+  {
     date_default_timezone_set('Asia/Jakarta');
   }
-  public function aula_page($id_tiket, $kode_tiket){
-      $tiketModel = new Tiket();
-      $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-      if (!$tiket) return view('errors/html/error_404');
 
-      $db = \Config\Database::connect();
-
-      // Ambil detail aula dari tb_tiket_detail
-      $row = $db->query(
-          "SELECT detail, mulai, selesai, judul
-          FROM tb_tiket_detail
-          WHERE id_tiket = ? AND tipe='aula'
-          LIMIT 1",
-          [$id_tiket]
-      )->getRowArray();
-
-      if (!$row) {
-          // tiket ada tapi detail aula tidak ada
-          return view('errors/html/error_404');
-      }
-
-      $detail = $row['detail'];
-      if (is_string($detail)) $detail = json_decode($detail, true);
-
-      // Ambil nama aula (join ke tabel aula)
-      $aulaNama = null;
-      $idAula = $detail['id_aula'] ?? null;
-      if ($idAula) {
-          $a = $db->query("SELECT nama_aula FROM ssaula WHERE id_aula = ?", [(int)$idAula])->getRowArray();
-          $aulaNama = $a['nama_aula'] ?? null;
-      }
-
-      $data = [
-          'title' => 'tiket',
-          'id_tiket' => $id_tiket,
-          'kode_tiket' => $tiket["kode_tiket"],
-          'tgl_input' => $tiket["tgl_input"],
-          'status' => $tiket["status"],
-          'catatan' => $tiket["catatan"],
-          'id_user' => $tiket["id_user"],
-
-          // dari JSON detail
-          'nama_pic' => $detail['nama_pic'] ?? null,
-          'no_pic' => $detail['no_pic'] ?? null,
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? null,
-
-          // dari tb_tiket_detail
-          'tgl_awal' => $row['mulai'] ?? null,
-          'tgl_akhir' => $row['selesai'] ?? null,
-          'nama_acara' => $row['judul'] ?? null,
-
-          // nama aula untuk view detail/aula
-          'aula' => $aulaNama,
-      ];
-
-      return view('detail/aula', $data);
-  }
-
-  public function zoom_page($id_tiket, $kode_tiket){
-    $tiketModel = new Tiket();
-    $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-    if (!$tiket) return view('errors/html/error_404');
-
-    $db = \Config\Database::connect();
-
-    // Ambil detail zoom dari tb_tiket_detail
-    $row = $db->query(
-      "SELECT detail, mulai, selesai, judul
-      FROM tb_tiket_detail
-      WHERE id_tiket = ? AND tipe='zoom'
-      LIMIT 1",
-      [$id_tiket]
-    )->getRowArray();
-
-    if (!$row) {
-      // tiket ada tapi detail zoom tidak ada
-      return view('errors/html/error_404');
-    }
-
-    $detail = $row['detail'];
-    if (is_string($detail)) $detail = json_decode($detail, true);
-
-    $data = [
-      'title' => 'tiket',
-      'id_tiket' => $id_tiket,
-      'kode_tiket' => $tiket["kode_tiket"],
-      'tgl_input' => $tiket["tgl_input"],
-      'status' => $tiket["status"],
-      'catatan' => $tiket["catatan"],
-      'id_user' => $tiket["id_user"],
-
-      // dari JSON detail
-      'nama_pic' => $detail['nama_pic'] ?? null,
-      'no_pic' => $detail['no_pic'] ?? null,
-      'berkas_pengantar' => $detail['berkas_pengantar'] ?? null,
-      'tempat' => $detail['tempat'] ?? null,
-      'passcode' => $detail['passcode'] ?? null,
-      'meeting_id' => $detail['meeting_id'] ?? null,
-      'operator' => $detail['operator'] ?? null,
-      'jenis_zoom' => $detail['jenis_zoom'] ?? null,
-
-      // dari tb_tiket_detail
-      'tgl_awal' => $row['mulai'] ?? null,
-      'tgl_akhir' => $row['selesai'] ?? null,
-      'nama_acara' => $row['judul'] ?? null,
-    ];
-
-    return view('detail/zoom', $data);
-  }
-
-  public function subdomain_page($id_tiket, $kode_tiket){
+  public function zoom_page($id_tiket, $kode_tiket)
+  {
     $tiketModel = new Tiket();
     $array = array('id_tiket' => $id_tiket);
     $tiket = $tiketModel->where($array)->findAll();
@@ -145,28 +42,128 @@ class Detail extends BaseController{
       $array = array('id_tiket' => $id_tiket);
       $tiket = $tiketModel->where($array)->first();
 
-      $db = \Config\Database::connect();
+      $pelayananModel = new Tiket_zoom();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
 
-      $pelayanan = $db->table('tb_tiket_detail')
-          ->where('id_tiket', $id_tiket)
-          ->where('tipe', 'subdomain')
-          ->get()
-          ->getRowArray();
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'tgl_akhir' => $pelayanan["tgl_akhir"],
+        'tgl_awal' => $pelayanan["tgl_awal"],
+        'nama_acara' => $pelayanan["nama_acara"],
+        'tempat' => $pelayanan["tempat"],
+        'passcode' => $pelayanan["passcode"],
+        'meeting_id' => $pelayanan["meeting_id"],
+        'operator' => $pelayanan["operator"],
+        'jenis_zoom' => $pelayanan["jenis_zoom"],
+      );
+      return view('detail/zoom', $data);
+    }
+  }
 
-      if (!$pelayanan) {
-          return view('errors/html/error_404');
-      }
+  // -----------------------------------------------------------------------------------------------------------------------
+  // Dynamic Detail (pelayanan dari DB)
+  public function dynamic_page($route, $id_tiket, $kode_tiket)
+  {
+    $pelayananModel = new Pelayanan();
+    $pelayanan = $pelayananModel->where('route', $route)->first();
+    if (!$pelayanan) {
+      return view('errors/html/error_404');
+    }
 
-      // kalau view kamu butuh field lama seperti nama_subdomain/ip_publik, mapping dari JSON:
-      $detail = json_decode($pelayananRow['detail'] ?? '{}', true);
+    $tiketModel = new Tiket();
+    $tiket = $tiketModel->where(['id_tiket' => $id_tiket, 'kode_tiket' => $kode_tiket])->first();
+    if (!$tiket) {
+      return view('errors/html/error_404');
+    }
 
-      $pelayanan = [
-          'nama_pic'         => $detail['nama_pic'] ?? '',
-          'no_pic'           => $detail['no_pic'] ?? '',
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? '',
-          'nama_subdomain'   => $pelayananRow['judul'] ?? ($detail['nama_subdomain'] ?? ''),
-          'ip_publik'        => $detail['ip_publik'] ?? '',
-      ];
+    $fieldModel = new PelayananField();
+    $fields = $fieldModel->where('id_pelayanan', $pelayanan['id_pelayanan'])
+      ->orderBy('sort_order', 'ASC')
+      ->findAll();
+
+    $detailModel = new TiketDetail();
+    $details = $detailModel->where('id_tiket', $id_tiket)->findAll();
+    $detailMap = [];
+    foreach ($details as $d) {
+      $detailMap[(string)$d['id_field']] = $d;
+    }
+
+    $data = [
+      'title' => 'detail',
+      'pelayanan' => $pelayanan,
+      'tiket' => $tiket,
+      'fields' => $fields,
+      'detailMap' => $detailMap,
+    ];
+
+    return view('detail/dynamic', $data);
+  }
+
+  public function aula_page($id_tiket, $kode_tiket)
+  {
+    $tiketModel = new Tiket();
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
+      return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
+
+      $pelayananModel = new Tiket_aula();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
+
+      $aulaModel = new Aula();
+      $array = array('id_aula' => $pelayanan["id_aula"]);
+      $aula = $aulaModel->where($array)->first();
+
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'tgl_akhir' => $pelayanan["tgl_akhir"],
+        'tgl_awal' => $pelayanan["tgl_awal"],
+        'nama_acara' => $pelayanan["nama_acara"],
+        'aula' => $aula["nama_aula"],
+      );
+      return view('detail/aula', $data);
+    }
+  }
+
+  public function subdomain_page($id_tiket, $kode_tiket)
+  {
+    $tiketModel = new Tiket();
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
+      return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
+
+      $pelayananModel = new Tiket_subdomain();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
 
       $data = array(
         'title' => 'tiket',
@@ -187,63 +184,8 @@ class Detail extends BaseController{
     }
   }
 
-  public function upload_page($id_tiket, $kode_tiket) {
-      // 1) Header tiket
-      $tiketModel = new Tiket();
-      $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-
-      if (!$tiket) {
-          return view('errors/html/error_404');
-      }
-
-      if ($tiket['kode_tiket'] !== $kode_tiket) {
-          return view('errors/html/error_404');
-      }
-
-      // 2) Detail layanan upload dari tb_tiket_detail
-      $db = \Config\Database::connect();
-      $row = $db->table('tb_tiket_detail')
-          ->where('id_tiket', $id_tiket)
-          ->where('tipe', 'upload')
-          ->get()->getRowArray();
-
-      if (!$row) {
-          return view('errors/html/error_404');
-      }
-
-      $detail = json_decode($row['detail'] ?? '{}', true);
-
-      // 3) Mapping agar view lama detail/upload tetap aman
-      $pelayanan = [
-          'nama_pic'         => $detail['nama_pic'] ?? '',
-          'no_pic'           => $detail['no_pic'] ?? '',
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? '',
-          'jenis_dokumen'    => $detail['jenis_dokumen'] ?? ($row['judul'] ?? ''),
-          'edisi'            => $detail['edisi'] ?? '',
-          'berkas_upload'    => $detail['berkas_upload'] ?? '',
-      ];
-
-      $data = [
-          'title' => 'tiket',
-          'id_tiket' => $id_tiket,
-          'kode_tiket' => $tiket["kode_tiket"],
-          'tgl_input' => $tiket["tgl_input"],
-          'status' => $tiket["status"],
-          'catatan' => $tiket["catatan"],
-          'id_user' => $tiket["id_user"],
-
-          'nama_pic' => $pelayanan["nama_pic"],
-          'no_pic' => $pelayanan["no_pic"],
-          'berkas_pengantar' => $pelayanan["berkas_pengantar"],
-          'jenis_dokumen' => $pelayanan["jenis_dokumen"],
-          'edisi' => $pelayanan["edisi"],
-          'berkas_upload' => $pelayanan["berkas_upload"],
-      ];
-
-      return view('detail/upload', $data);
-  }
-
-  public function hosting_page($id_tiket, $kode_tiket){
+  public function upload_page($id_tiket, $kode_tiket)
+  {
     $tiketModel = new Tiket();
     $array = array('id_tiket' => $id_tiket);
     $tiket = $tiketModel->where($array)->findAll();
@@ -253,31 +195,44 @@ class Detail extends BaseController{
       $array = array('id_tiket' => $id_tiket);
       $tiket = $tiketModel->where($array)->first();
 
+      $pelayananModel = new Tiket_upload();
       $array = array('id_tiket' => $id_tiket);
-      $db = \Config\Database::connect();
-      $row = $db->table('tb_tiket_detail')
-          ->where('id_tiket', $id_tiket)
-          ->where('tipe', 'hosting')
-          ->get()->getRowArray();
+      $pelayanan = $pelayananModel->where($array)->first();
 
-      if (!$row) {
-          return view('errors/html/error_404');
-      }
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'jenis_dokumen' => $pelayanan["jenis_dokumen"],
+        'edisi' => $pelayanan["edisi"],
+        'berkas_upload' => $pelayanan["berkas_upload"],
+      );
+      return view('detail/upload', $data);
+    }
+  }
 
-      $detail = json_decode($row['detail'] ?? '{}', true);
+  public function hosting_page($id_tiket, $kode_tiket)
+  {
+    $tiketModel = new Tiket();
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
+      return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
 
-      // bentukin array "pelayanan" mirip tabel lama supaya mapping data kamu tetap jalan
-      $pelayanan = [
-          'nama_pic'         => $detail['nama_pic'] ?? '',
-          'no_pic'           => $detail['no_pic'] ?? '',
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? '',
-          'nama_aplikasi'    => $detail['nama_aplikasi'] ?? ($row['judul'] ?? ''),
-          'deskripsi'        => $detail['deskripsi'] ?? '',
-          'spesifikasi'      => $detail['spesifikasi'] ?? '',
-          'port'             => $detail['port'] ?? '',
-          'db_access'        => $detail['db_access'] ?? '',
-          'server_access'    => $detail['server_access'] ?? '',
-      ];
+      $pelayananModel = new Tiket_hosting();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
 
       $data = array(
         'title' => 'tiket',
@@ -302,237 +257,166 @@ class Detail extends BaseController{
     }
   }
 
-  public function tte_page($id_tiket, $kode_tiket){
-      // 1) Ambil header tiket
-      $tiketModel = new \App\Models\Tiket();
-      $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-
-      if (!$tiket) {
-          return view('errors/html/error_404');
-      }
-
-      // (opsional) validasi kode tiket dari URL kalau mau strict
-      if ($tiket['kode_tiket'] !== $kode_tiket) {
-          return view('errors/html/error_404');
-      }
-
-      // 2) Ambil detail TTE dari tb_tiket_detail
-      $db = \Config\Database::connect();
-      $row = $db->table('tb_tiket_detail')
-          ->where('id_tiket', $id_tiket)
-          ->where('tipe', 'tte')
-          ->get()->getRowArray();
-
-      if (!$row) {
-          return view('errors/html/error_404');
-      }
-
-      $detail = json_decode($row['detail'] ?? '{}', true);
-
-      // 3) Mapping agar view lama tetap aman
-      $pelayanan = [
-          'nama_pic'         => $detail['nama_pic'] ?? '',
-          'no_pic'           => $detail['no_pic'] ?? '',
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? '',
-          'nama'             => $detail['nama'] ?? '',
-          'jabatan'          => $detail['jabatan'] ?? '',
-          'nip'              => $detail['nip'] ?? '',
-          'nik'              => $detail['nik'] ?? '',
-          'jenis_layanan'    => $detail['jenis_layanan'] ?? '',
-          'berkas_ktp'       => $detail['berkas_ktp'] ?? '',
-      ];
-
-      // 4) Kirim ke view
-      $data = [
-          'title' => 'tiket',
-          'id_tiket' => $id_tiket,
-          'kode_tiket' => $tiket["kode_tiket"],
-          'tgl_input' => $tiket["tgl_input"],
-          'status' => $tiket["status"],
-          'catatan' => $tiket["catatan"],
-          'id_user' => $tiket["id_user"],
-
-          'nama_pic' => $pelayanan["nama_pic"],
-          'no_pic' => $pelayanan["no_pic"],
-          'berkas_pengantar' => $pelayanan["berkas_pengantar"],
-          'nama' => $pelayanan["nama"],
-          'jabatan' => $pelayanan["jabatan"],
-          'nip' => $pelayanan["nip"],
-          'nik' => $pelayanan["nik"],
-          'jenis_layanan' => $pelayanan["jenis_layanan"],
-          'berkas_ktp' => $pelayanan["berkas_ktp"],
-      ];
-
-      return view('detail/tte', $data);
-  }
-
-  public function app_page($id_tiket, $kode_tiket){
-      // 1) Header tiket
-      $tiketModel = new Tiket();
-      $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-
-      if (!$tiket) {
-          return view('errors/html/error_404');
-      }
-
-      // optional: validasi kode tiket dari URL
-      if ($tiket['kode_tiket'] !== $kode_tiket) {
-          return view('errors/html/error_404');
-      }
-
-      // 2) Detail layanan dari tb_tiket_detail
-      $db = \Config\Database::connect();
-      $row = $db->table('tb_tiket_detail')
-          ->where('id_tiket', $id_tiket)
-          ->where('tipe', 'app')
-          ->get()->getRowArray();
-
-      if (!$row) {
-          return view('errors/html/error_404');
-      }
-
-      $detail = json_decode($row['detail'] ?? '{}', true);
-
-      // 3) Mapping agar view detail/app tetap aman
-      $pelayanan = [
-          'nama_pic' => $detail['nama_pic'] ?? '',
-          'no_pic' => $detail['no_pic'] ?? '',
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? '',
-          'agenda' => $detail['agenda'] ?? '',
-          'tempat' => $detail['tempat'] ?? '',
-          'tgl' => $detail['tgl'] ?? '',
-          'nama_aplikasi' => $detail['nama_aplikasi'] ?? ($row['judul'] ?? ''),
-          'deskripsi_aplikasi' => $detail['deskripsi_aplikasi'] ?? '',
-      ];
-
-      $data = [
-          'title' => 'tiket',
-          'id_tiket' => $id_tiket,
-          'kode_tiket' => $tiket["kode_tiket"],
-          'tgl_input' => $tiket["tgl_input"],
-          'status' => $tiket["status"],
-          'catatan' => $tiket["catatan"],
-          'id_user' => $tiket["id_user"],
-
-          'nama_pic' => $pelayanan["nama_pic"],
-          'no_pic' => $pelayanan["no_pic"],
-          'berkas_pengantar' => $pelayanan["berkas_pengantar"],
-          'agenda' => $pelayanan["agenda"],
-          'tempat' => $pelayanan["tempat"],
-          'tgl' => $pelayanan["tgl"],
-          'nama_aplikasi' => $pelayanan["nama_aplikasi"],
-          'deskripsi_aplikasi' => $pelayanan["deskripsi_aplikasi"],
-      ];
-
-      return view('detail/app', $data);
-  }
-
-  public function jaringan_page($id_tiket, $kode_tiket) {
-      $tiketModel = new Tiket();
-      $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-
-      if (!$tiket) {
-          return view('errors/html/error_404');
-      }
-
-      if ($tiket['kode_tiket'] !== $kode_tiket) {
-          return view('errors/html/error_404');
-      }
-
-      $db = \Config\Database::connect();
-      $row = $db->table('tb_tiket_detail')
-          ->where('id_tiket', $id_tiket)
-          ->where('tipe', 'jaringan')
-          ->get()->getRowArray();
-
-      if (!$row) {
-          return view('errors/html/error_404');
-      }
-
-      $detail = json_decode($row['detail'] ?? '{}', true);
-
-      $data = [
-          'title' => 'tiket',
-          'id_tiket' => $id_tiket,
-          'kode_tiket' => $tiket["kode_tiket"],
-          'tgl_input' => $tiket["tgl_input"],
-          'status' => $tiket["status"],
-          'catatan' => $tiket["catatan"],
-          'id_user' => $tiket["id_user"],
-
-          'nama_pic' => $detail['nama_pic'] ?? '',
-          'no_pic' => $detail['no_pic'] ?? '',
-          'tgl_kejadian' => $detail['tgl_kejadian'] ?? '',
-          'keluhan' => $detail['keluhan'] ?? '',
-          'tindak_lanjut' => $detail['tindak_lanjut'] ?? '',
-          'berkas_pengantar' => $detail['berkas_pengantar'] ?? '',
-          'foto' => $detail['dokumentasi'] ?? [],
-      ];
-
-      return view('detail/jaringan', $data);
-  }
-
-  public function alat_page($id_tiket, $kode_tiket){
+  public function tte_page($id_tiket, $kode_tiket)
+  {
     $tiketModel = new Tiket();
-    $tiket = $tiketModel->where(['id_tiket' => $id_tiket])->first();
-    if (!$tiket) return view('errors/html/error_404');
-
-    $db = \Config\Database::connect();
-
-    // ambil detail alat dari tb_tiket_detail (JSONB)
-    $row = $db->query(
-      "SELECT detail, mulai, selesai, judul
-      FROM tb_tiket_detail
-      WHERE id_tiket = ? AND tipe='alat'
-      LIMIT 1",
-      [$id_tiket]
-    )->getRowArray();
-
-    if (!$row) {
-      // tiket ada tapi tidak punya detail alat
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
       return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
+
+      $pelayananModel = new Tiket_tte();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
+
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'nama' => $pelayanan["nama"],
+        'jabatan' => $pelayanan["jabatan"],
+        'nip' => $pelayanan["nip"],
+        'nik' => $pelayanan["nik"],
+        'jenis_layanan' => $pelayanan["jenis_layanan"],
+        'berkas_ktp' => $pelayanan["berkas_ktp"],
+      );
+      return view('detail/tte', $data);
     }
-
-    // detail bisa string json atau sudah array, amankan:
-    $detail = $row['detail'];
-    if (is_string($detail)) $detail = json_decode($detail, true);
-
-    // list alat dari alat_ids
-    $list = $db->query(
-      "SELECT a.id_alat, a.nama_alat, a.merk, a.nomor_seri
-      FROM tb_tiket_detail d
-      JOIN LATERAL jsonb_array_elements_text(d.detail->'alat_ids') AS x(id_alat_txt) ON TRUE
-      JOIN ssalat a ON a.id_alat = x.id_alat_txt::int
-      WHERE d.id_tiket = ? AND d.tipe = 'alat'",
-      [$id_tiket]
-    )->getResult();
-
-    $data = [
-      'title' => 'tiket',
-      'id_tiket' => $id_tiket,
-      'kode_tiket' => $tiket["kode_tiket"],
-      'tgl_input' => $tiket["tgl_input"],
-      'status' => $tiket["status"],
-      'catatan' => $tiket["catatan"],
-      'id_user' => $tiket["id_user"],
-
-      // ambil dari JSON detail
-      'nama_pic' => $detail['nama_pic'] ?? null,
-      'no_pic' => $detail['no_pic'] ?? null,
-      'berkas_pengantar' => $detail['berkas_pengantar'] ?? null,
-
-      // ambil dari tb_tiket_detail (kalau dipakai di view)
-      'tgl_awal' => $row['mulai'] ?? null,
-      'tgl_akhir' => $row['selesai'] ?? null,
-      'nama_acara' => $row['judul'] ?? null,
-
-      'list' => $list,
-    ];
-
-    return view('detail/alat', $data);
   }
 
-  public function magang_page($id_tiket, $kode_tiket){
+  public function app_page($id_tiket, $kode_tiket)
+  {
+    $tiketModel = new Tiket();
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
+      return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
+
+      $pelayananModel = new Tiket_app();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
+
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'agenda' => $pelayanan["agenda"],
+        'tempat' => $pelayanan["tempat"],
+        'tgl' => $pelayanan["tgl"],
+        'nama_aplikasi' => $pelayanan["nama_aplikasi"],
+        'deskripsi_aplikasi' => $pelayanan["deskripsi_aplikasi"],
+      );
+      return view('detail/app', $data);
+    }
+  }
+
+  public function jaringan_page($id_tiket, $kode_tiket)
+  {
+    $tiketModel = new Tiket();
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
+      return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
+
+      $pelayananModel = new Tiket_jaringan();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
+
+      $listModel = new Tiket_jaringan_foto();
+      $array = array('id_pelayanan_jaringan' => $pelayanan["id_pelayanan_jaringan"]);
+      $list = $listModel->where($array)->findAll();
+
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'tgl_kejadian' => $pelayanan["tgl_kejadian"],
+        'keluhan' => $pelayanan["keluhan"],
+        'tindak_lanjut' => $pelayanan["tindak_lanjut"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'foto' => $list,
+      );
+      return view('detail/jaringan', $data);
+    }
+  }
+
+  public function alat_page($id_tiket, $kode_tiket)
+  {
+    $tiketModel = new Tiket();
+    $array = array('id_tiket' => $id_tiket);
+    $tiket = $tiketModel->where($array)->findAll();
+    if (count($tiket) == 0) {
+      return view('errors/html/error_404');
+    } else {
+      $array = array('id_tiket' => $id_tiket);
+      $tiket = $tiketModel->where($array)->first();
+
+      $pelayananModel = new Tiket_alat();
+      $array = array('id_tiket' => $id_tiket);
+      $pelayanan = $pelayananModel->where($array)->first();
+
+      // $listModel = new Tiket_alat_list();
+      // $array = array('id_pelayanan_alat' => $pelayanan["id_pelayanan_alat"]);
+      // $list = $listModel->where($array)->findAll();
+
+      $db = \Config\Database::connect();
+      $list = $db->table('tb_tiket_alat_list')->select('ssalat.nama_alat,ssalat.merk')->join('ssalat', 'ssalat.id_alat = tb_tiket_alat_list.id_alat', 'left')->where('tb_tiket_alat_list.id_pelayanan_alat', $pelayanan["id_tiket"])->get()->getResult();
+
+      $data = array(
+        'title' => 'tiket',
+        'id_tiket' => $id_tiket,
+        'kode_tiket' => $tiket["kode_tiket"],
+        'tgl_input' => $tiket["tgl_input"],
+        // 'status' => 2,
+        'status' => $tiket["status"],
+        'catatan' => $tiket["catatan"],
+        'id_user' => $tiket["id_user"],
+        'nama_pic' => $pelayanan["nama_pic"],
+        'no_pic' => $pelayanan["no_pic"],
+        'berkas_pengantar' => $pelayanan["berkas_pengantar"],
+        'tgl_akhir' => $pelayanan["tgl_akhir"],
+        'tgl_awal' => $pelayanan["tgl_awal"],
+        'nama_acara' => $pelayanan["nama_acara"],
+        'list' => $list,
+      );
+      return view('detail/alat', $data);
+    }
+  }
+
+  public function magang_page($id_tiket, $kode_tiket)
+  {
     $tiketModel = new Tiket_magang();
     $array = array('id_tiket' => $id_tiket);
     $tiket = $tiketModel->where($array)->findAll();

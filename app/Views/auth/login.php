@@ -75,7 +75,7 @@
         <div class="text-center mb-5">
             <img src="<?= base_url('assets/image/logo_opd/logokominfo-1.png') ?>" alt="logo" width="100" class="mb-4">
             <h2 class="font-weight-bold text-dark" style="font-size: 2rem;">Verifikasi OTP</h2>
-            <p class="text-muted">Masukkan 6 digit kode yang dikirim ke Telegram Anda</p>
+            <p class="text-muted">Masukkan 6 digit kode yang dikirim ke Email Anda</p>
         </div>
 
         <div class="pin-code mb-4">

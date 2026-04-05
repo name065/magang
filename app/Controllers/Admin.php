@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Pelayanan;
+use App\Models\PelayananField;
 use App\Models\Otp;
 use App\Models\User;
 use App\Models\Opd;
@@ -920,9 +921,211 @@ class Admin extends BaseController
     public function get_pelayanan()
     {
         $userModel = new Pelayanan();
-        $users = $userModel->findAll();
+
+        // Default: hanya pelayanan aktif + tampil (untuk dropdown/form)
+        // Admin master page akan memanggil dengan ?mode=all
+        $mode = $this->request->getGet('mode');
+        if ($mode === 'all') {
+            $users = $userModel->orderBy('id_pelayanan', 'ASC')->findAll();
+        } else {
+            $users = $userModel->where('active', 1)
+                ->where('is_visible', 1)
+                ->orderBy('nama_pelayanan', 'ASC')
+                ->findAll();
+        }
 
         echo json_encode($users);
+    }
+
+    // ------------------------------------------
+    // Master Form Pelayanan (Dynamic)
+    public function pelayanan_form_page($id_pelayanan)
+    {
+        $pelayananModel = new Pelayanan();
+        $pelayanan = $pelayananModel->where('id_pelayanan', $id_pelayanan)->first();
+        if (!$pelayanan) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $data = [
+            'title' => 'pelayanan_form',
+            'pelayanan' => $pelayanan
+        ];
+        return view('admin/pelayanan_form', $data);
+    }
+
+    public function get_pelayanan_fields()
+    {
+        $fieldModel = new PelayananField();
+        $id_pelayanan = $this->request->getGet('id_pelayanan');
+        $fields = $fieldModel->where('id_pelayanan', $id_pelayanan)
+            ->orderBy('sort_order', 'ASC')
+            ->findAll();
+        echo json_encode($fields);
+    }
+
+   public function set_pelayanan_field(){
+        $fieldModel = new PelayananField();
+
+        $id_pelayanan = trim((string) $this->request->getVar('id_pelayanan'));
+        $field_key    = trim((string) $this->request->getVar('field_key'));
+        $label        = trim((string) $this->request->getVar('label'));
+        $type         = trim((string) $this->request->getVar('type'));
+        $options_json = trim((string) $this->request->getVar('options_json'));
+
+        if ($id_pelayanan === '' || $field_key === '' || $label === '' || $type === '') {
+            return $this->response->setJSON([
+                'status'  => 400,
+                'message' => 'Data field belum lengkap.'
+            ]);
+        }
+
+        if ($type === 'select' && $options_json !== '') {
+            json_decode($options_json, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->response->setJSON([
+                    'status'  => 400,
+                    'message' => 'Options JSON tidak valid.'
+                ]);
+            }
+        }
+
+        $cek = $fieldModel->where('id_pelayanan', $id_pelayanan)
+            ->where('field_key', $field_key)
+            ->first();
+
+        if ($cek) {
+            return $this->response->setJSON([
+                'status'  => 400,
+                'message' => 'Field Key sudah terdaftar pada pelayanan ini.'
+            ]);
+        }
+
+        $data = [
+            'id_pelayanan' => $id_pelayanan,
+            'field_key'    => $field_key,
+            'label'        => $label,
+            'type'         => $type,
+            'placeholder'  => trim((string) $this->request->getVar('placeholder')),
+            'help_text'    => trim((string) $this->request->getVar('help_text')),
+            'options_json' => $options_json,
+            'is_required'  => (int) ($this->request->getVar('is_required') ?? 0),
+            'sort_order'   => (int) ($this->request->getVar('sort_order') ?? 0),
+            'active'       => 1,
+        ];
+
+        if (!$fieldModel->insert($data)) {
+            return $this->response->setJSON([
+                'status'  => 500,
+                'message' => 'Field gagal ditambahkan.'
+            ]);
+        }
+
+        $pelayananModel = new Pelayanan();
+        $pelayananModel->update($id_pelayanan, ['is_dynamic' => 1]);
+
+        return $this->response->setJSON([
+            'status'  => 200,
+            'message' => 'Field berhasil ditambahkan.'
+        ]);
+    }
+    public function update_pelayanan_field(){
+        $fieldModel = new PelayananField();
+
+        $id_field      = trim((string) $this->request->getVar('id_field'));
+        $id_pelayanan  = trim((string) $this->request->getVar('id_pelayanan'));
+        $field_key     = trim((string) $this->request->getVar('field_key'));
+        $label         = trim((string) $this->request->getVar('label'));
+        $type          = trim((string) $this->request->getVar('type'));
+        $options_json  = trim((string) $this->request->getVar('options_json'));
+
+        if ($id_field === '' || $field_key === '' || $label === '' || $type === '') {
+            return $this->response->setJSON([
+                'status'  => 400,
+                'message' => 'Data field belum lengkap.'
+            ]);
+        }
+
+        if ($type === 'select' && $options_json !== '') {
+            json_decode($options_json, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->response->setJSON([
+                    'status'  => 400,
+                    'message' => 'Options JSON tidak valid.'
+                ]);
+            }
+        }
+
+        $cekDuplikat = $fieldModel->where('id_pelayanan', $id_pelayanan)
+            ->where('field_key', $field_key)
+            ->where('id_field !=', $id_field)
+            ->first();
+
+        if ($cekDuplikat) {
+            return $this->response->setJSON([
+                'status'  => 400,
+                'message' => 'Field Key sudah digunakan oleh field lain.'
+            ]);
+        }
+
+        $data = [
+            'field_key'    => $field_key,
+            'label'        => $label,
+            'type'         => $type,
+            'placeholder'  => trim((string) $this->request->getVar('placeholder')),
+            'help_text'    => trim((string) $this->request->getVar('help_text')),
+            'options_json' => $options_json,
+            'is_required'  => (int) ($this->request->getVar('is_required') ?? 0),
+            'sort_order'   => (int) ($this->request->getVar('sort_order') ?? 0),
+        ];
+
+        if (!$fieldModel->update($id_field, $data)) {
+            return $this->response->setJSON([
+                'status'  => 500,
+                'message' => 'Field gagal diubah.'
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => 200,
+            'message' => 'Field berhasil diubah.'
+        ]);
+    }
+
+    public function update_status_pelayanan_field() {
+        $fieldModel = new PelayananField();
+
+        $id_field = $this->request->getVar('id_field');
+        $active   = $this->request->getVar('active');
+
+        if (!$fieldModel->update($id_field, ['active' => $active])) {
+            return $this->response->setJSON([
+                'status'  => 500,
+                'message' => 'Status field gagal diubah.'
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => 200,
+            'message' => 'Status field berhasil diubah.'
+        ]);
+    }
+
+    public function del_pelayanan_field(){
+        $fieldModel = new PelayananField();
+        $id_field = $this->request->getVar('id_field');
+
+        if (!$fieldModel->delete($id_field)) {
+            return $this->response->setJSON([
+                'status'  => 500,
+                'message' => 'Field gagal dihapus.'
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => 200,
+            'message' => 'Field berhasil dihapus.'
+        ]);
     }
 
     public function update_status_pelayanan()
@@ -955,8 +1158,7 @@ class Admin extends BaseController
         echo json_encode($response);
     }
 
-    public function set_pelayanan()
-    {
+    public function set_pelayanan() {
         $userModel = new Pelayanan();
 
         $array = array('route' => $this->request->getVar('route'), 'active' => 1);
@@ -972,6 +1174,8 @@ class Admin extends BaseController
                 'file_foto'    => 'logokominfo.png',
                 'tgl_input'    => $tgl,
                 'active'    => 1,
+                'is_visible'    => 1,
+                'is_dynamic'    => 0,
                 'id_opd'    => $this->request->getVar('id_opd'),
             ];
 

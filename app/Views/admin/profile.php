@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="profile-widget-item">
                                     <div class="profile-widget-item-label">Id Chat</div>
-                                    <div class="profile-widget-item-value" id="id_chat_detail"><?= $id_chat ?></div>
+                                    <div class="profile-widget-item-value" id="id_chat_detail"><?= $email ?></div>
                                 </div>
                                 <div class="profile-widget-item">
                                     <div class="profile-widget-item-label">Role</div>
@@ -48,7 +48,7 @@
                             <div class="section-title">Id Chat</div>
                             <div class="form-group">
                                 <div class="input-group mb-3">
-                                    <input id="id_chat" type="number" class="form-control" value="<?= $id_chat ?>"
+                                    <input id="email" type="email" class="form-control" value="<?= $email ?>"
                                         placeholder="" aria-label="">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" onclick="ubah_telegram()"
@@ -120,10 +120,10 @@ $(document).ready(function() {
 });
 
 function ubah_telegram() {
-    document.getElementById("id_chat").classList.remove("is-invalid");
-    if (document.getElementById('id_chat').value == "" || isEmptyOrSpaces(document.getElementById('id_chat').value)) {
-        document.getElementById('id_chat').classList.add("is-invalid");
-        document.getElementById("id_chat").focus();
+    document.getElementById("email").classList.remove("is-invalid");
+    if (document.getElementById('email').value == "" || isEmptyOrSpaces(document.getElementById('email').value)) {
+        document.getElementById('email').classList.add("is-invalid");
+        document.getElementById("email").focus();
         Swal.fire({
             icon: 'error',
             title: 'Gagal...',
@@ -132,7 +132,7 @@ function ubah_telegram() {
     } else {
         var formData = new FormData();
         formData.append('id_ssuser', <?= session()->get('id_user') ?>);
-        formData.append('id_chat', document.getElementById("id_chat").value);
+        formData.append('email', document.getElementById("email").value);
 
         $.ajax({
             url: "<?= base_url() ?>/<?= session()->get('role') ?>/pengguna/update_id_chat",
@@ -152,7 +152,7 @@ function ubah_telegram() {
                         showConfirmButton: false,
                         timer: 1500,
                     });
-                    document.getElementById("id_chat_detail").innerHTML = document.getElementById('id_chat')
+                    document.getElementById("id_chat_detail").innerHTML = document.getElementById('email')
                         .value;
 
                 } else {

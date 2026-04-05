@@ -113,9 +113,9 @@ class Magang extends BaseController
             // NOTIFIKASI TO USER
             $db = \Config\Database::connect();
             $tiket = $db->table('tb_tiket_magang')->select('tb_tiket_magang.id_user')->where("tb_tiket_magang.id_tiket", $this->request->getVar('id_tiket'))->get()->getRow();
-            $user = $db->table('ssuser')->select('ssuser.id_chat')->where("ssuser.id_ssuser", $tiket->id_user)->get()->getRow();
+            $user = $db->table('ssuser')->select('ssuser.email')->where("ssuser.id_ssuser", $tiket->id_user)->get()->getRow();
             helper('notification_helper');
-            $hasil = telegram($user->id_chat,$message);
+            $hasil = telegram($user->email,$message);
         }
         
         echo json_encode($response);

@@ -349,7 +349,7 @@ function get_data() {
         },
         "ajax": {
             "type": "GET",
-            "url": "<?= base_url() ?>/admin/pelayanan/get_pelayanan",
+            "url": "<?= base_url() ?>/admin/pelayanan/get_pelayanan?mode=all",
             "dataSrc": "",
             "data": function(data) {
                 // data.opd_admin = $opd_admin;
@@ -411,6 +411,10 @@ function get_data() {
                     button +=
                         '<button onclick="del(' + data +
                         ')" class="btn btn-icon btn-dark mr-2"><i class="fas fa-trash-alt"></i></button>';
+
+                    // kelola form dinamis
+                    button +=
+                        '<a href="<?= base_url() ?>/admin/pelayanan/form/' + data + '" class="btn btn-icon btn-primary mr-2" title="Master Form"><i class="fas fa-list"></i></a>';
                     return button;
                 }
             },

@@ -58,7 +58,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Id Chat</label>
-                                <input id="id_chat" type="number" class="form-control">
+                                <input id="email" type="email" class="form-control">
                             </div>
                             <!-- <div class="form-group">
                                 <label>Foto</label>
@@ -148,7 +148,7 @@ $(document).ready(function() {
 function reset() {
     document.getElementById('nama').value = "";
     // document.getElementById('username').value = "";
-    document.getElementById('id_chat').value = "";
+    document.getElementById('email').value = "";
     document.getElementById('nip').value = "";
     // document.getElementById('foto').value = "";
 
@@ -159,7 +159,7 @@ function reset() {
 function remove_invalid() {
     //INVALID
     document.getElementById('nama').classList.remove("is-invalid");
-    document.getElementById('id_chat').classList.remove("is-invalid");
+    document.getElementById('email').classList.remove("is-invalid");
     document.getElementById('nip').classList.remove("is-invalid");
 }
 
@@ -175,8 +175,8 @@ function toogle_btn($status) {
 
 }
 
-function open_modal_id_chat($id, $id_chat) {
-    document.getElementById('id_chat_ubah').value = $id_chat;
+function open_modal_id_chat($id, $email) {
+    document.getElementById('id_chat_ubah').value = $email;
     document.getElementById("ubah_tombol").innerHTML =
         '<button onclick="update_id_chat(' + $id + ')" type="button" class="btn btn-primary">Simpan</button>';
     $('#idChatModal').modal('show');
@@ -188,12 +188,12 @@ function open_modal_foto($id) {
     $('#fotoModal').modal('show');
 }
 
-function ubah($id_ssuser, $nama, $id_chat, $nip, $status = 1) {
+function ubah($id_ssuser, $nama, $email, $nip, $status = 1) {
     remove_invalid();
 
     document.getElementById('nama').value = $nama;
     // document.getElementById('username').value = $username;
-    document.getElementById('id_chat').value = $id_chat;
+    document.getElementById('email').value = $email;
     document.getElementById('nip').value = $nip;
     var baris = "";
     baris += '<div class="d-flex justify-content-between mb-4">';
@@ -269,10 +269,10 @@ function tambah_user() {
             "Isian NIP lebih dari 18 digit.",
             'error'
         );
-    } else if (document.getElementById('id_chat').value == "" || isEmptyOrSpaces(document.getElementById('id_chat')
+    } else if (document.getElementById('email').value == "" || isEmptyOrSpaces(document.getElementById('email')
             .value)) {
-        document.getElementById('id_chat').classList.add("is-invalid");
-        document.getElementById("id_chat").focus();
+        document.getElementById('email').classList.add("is-invalid");
+        document.getElementById("email").focus();
 
         Swal.fire({
             icon: 'error',
@@ -281,7 +281,7 @@ function tambah_user() {
         });
     }
     // else if (document.getElementById("foto").value == "") {
-    //     document.getElementById("id_chat").classList.remove("is-invalid");
+    //     document.getElementById("email").classList.remove("is-invalid");
     //     document.getElementById("foto").classList.add("is-invalid");
     //     document.getElementById("foto").focus();
     // } 
@@ -291,7 +291,7 @@ function tambah_user() {
         var formData = new FormData();
         formData.append('nama', document.getElementById("nama").value);
         // formData.append('username', document.getElementById("username").value);
-        formData.append('id_chat', document.getElementById("id_chat").value);
+        formData.append('email', document.getElementById("email").value);
         formData.append('nip', document.getElementById("nip").value);
         // formData.append('foto', document.getElementById("foto").files[0]);
 
@@ -406,10 +406,10 @@ function ubah_user($id) {
             "Isian NIP lebih dari 18 digit.",
             'error'
         );
-    } else if (document.getElementById('id_chat').value == "" || isEmptyOrSpaces(document.getElementById('id_chat')
+    } else if (document.getElementById('email').value == "" || isEmptyOrSpaces(document.getElementById('email')
             .value)) {
-        document.getElementById('id_chat').classList.add("is-invalid");
-        document.getElementById("id_chat").focus();
+        document.getElementById('email').classList.add("is-invalid");
+        document.getElementById("email").focus();
 
         Swal.fire({
             icon: 'error',
@@ -422,7 +422,7 @@ function ubah_user($id) {
 
         var formData = new FormData();
         formData.append('nama', document.getElementById("nama").value);
-        formData.append('id_chat', document.getElementById("id_chat").value);
+        formData.append('email', document.getElementById("email").value);
         formData.append('nip', document.getElementById("nip").value);
         formData.append('id_user', $id);
 
@@ -514,7 +514,7 @@ function get_data() {
                 button +=
                     '<div class="text-small text-muted">' + data +
                     ' <div class="bullet"></div> <span class="text-primary">' +
-                    row.id_chat + '</span>';
+                    row.email + '</span>';
 
                 if (row.active == 1) {
                     button +=
@@ -537,7 +537,7 @@ function get_data() {
             "render": function(data, type, row) {
                 var button = "";
                 // var button =
-                //     '<button onclick="open_modal_id_chat(' + data + ',' + row.id_chat +
+                //     '<button onclick="open_modal_id_chat(' + data + ',' + row.email +
                 //     ')" class="btn btn-icon btn-primary mr-2"><i class="fas fa-key"></i></button>';
                 // button +=
                 //     '<button onclick="open_modal_foto(' + data +
@@ -555,7 +555,7 @@ function get_data() {
 
                 button +=
                     '<button onclick="ubah(' + data +
-                    ",'" + row.nama + "'" + ",'" + row.id_chat + "'" + ",'" + row.nip +
+                    ",'" + row.nama + "'" + ",'" + row.email + "'" + ",'" + row.nip +
                     "'" +
                     ')" class="btn btn-icon btn-warning mr-2"><i class="far fa-edit"></i></button>';
 
@@ -627,7 +627,7 @@ function update_active($status, $id) {
 function update_id_chat($id) {
     var formData = new FormData();
     formData.append('id_ssuser', $id);
-    formData.append('id_chat', document.getElementById("id_chat_ubah").value);
+    formData.append('email', document.getElementById("id_chat_ubah").value);
 
     $.ajax({
         url: "<?= base_url() ?>/admin/pengguna/update_id_chat",

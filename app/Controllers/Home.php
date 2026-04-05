@@ -497,16 +497,28 @@ class Home extends BaseController
     // -----------------------------------------------------------------------------------------------------------------------
     // Notifikasi
     
-    public function notification($chat_id,$message)
+    public function notification($email_to,$message)
     {
-        $apiToken = "5891211388:AAEEr5OkhKVGZi0JMt2ENhHLLmJFDKlspiE";
-        $data = [
-        'chat_id' => $chat_id,
-        'text' => $message 
-        ];
-        $response = file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data) );
-        $response = json_decode($response);
-        // return $response->ok;
-        return $response;
+        $email = \Config\Services::email();
+        $email->setTo($email_to);
+        $email->setSubject('PELUIT - Notifikasi');
+        $email->setMessage($message . "\n\n\n-----P E L U I T-----");
+
+        $resp = new \stdClass();
+        try {
+            if ($email->send()) {
+                $resp->ok = true;
+                $resp->result = 'sent';
+            } else {
+                $resp->ok = false;
+                $resp->result = $email->printDebugger(['headers', 'subject']);
+            }
+        } catch (\Throwable $e) {
+            $resp->ok = false;
+            $resp->result = $e->getMessage();
+        }
+
+        return $resp;
     }
+
 }

@@ -67,7 +67,7 @@ class Auth extends BaseController
 
         $message = "Silahkan gunakan Kode OTP ini untuk dapat login. \n\nKode OTP : " . $this->request->getVar('otp');
         helper('notification_helper');
-        $hasil = telegram($users["id_chat"], $message);
+        $hasil = telegram($users["email"], $message);
         if ($hasil->ok == true) {
           $response = [
             'status' => 200,
@@ -175,7 +175,7 @@ class Auth extends BaseController
       $data = [
         'nama' => $this->request->getVar('nama'),
         'username'    => $this->request->getVar('nim'),
-        'id_chat'    => $this->request->getVar('id_chat'),
+        'email'    => $this->request->getVar('email'),
         'nik'    => $this->request->getVar('nik'),
         'role_id'    => 4,
         'active'    => 3,
@@ -216,13 +216,13 @@ class Auth extends BaseController
 
       // NOTIFIKASI TO ADMIN
       $db = \Config\Database::connect();
-      $builder = $db->table('ssuser')->select('ssuser.id_chat')->where("ssuser.active", 1)->where("ssuser.role_id", 0)->get()->getResult();
+      $builder = $db->table('ssuser')->select('ssuser.email')->where("ssuser.active", 1)->where("ssuser.role_id", 0)->get()->getResult();
 
       foreach ($builder as $row) {
         $message = "Haloo Admin.
                 \nAyo login, ada permohonan pembuatan akun yang harus kamu verifikasi. \nNama : " . $this->request->getVar('nama') . "\nCivitas : " . $this->request->getVar('univ');
         helper('notification_helper');
-        $hasil = telegram($row->id_chat, $message);
+        $hasil = telegram($row->email, $message);
       }
 
       $response = [
@@ -272,7 +272,7 @@ class Auth extends BaseController
 
       $message = "Silahkan gunakan Kode OTP ini untuk daftar. \n\nKode OTP : " . $this->request->getVar('otp');
       helper('notification_helper');
-      $hasil = telegram($this->request->getVar('id_chat'), $message);
+      $hasil = telegram($this->request->getVar('email'), $message);
       if ($hasil->ok == true) {
         $response = [
           'status' => 200,
@@ -303,7 +303,7 @@ class Auth extends BaseController
 
         $message = "Silahkan gunakan Kode OTP ini untuk daftar. \n\nKode OTP : " . $this->request->getVar('otp');
         helper('notification_helper');
-        $hasil = telegram($this->request->getVar('id_chat'), $message);
+        $hasil = telegram($this->request->getVar('email'), $message);
         if ($hasil->ok == true) {
           $response = [
             'status' => 200,

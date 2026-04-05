@@ -165,6 +165,15 @@ $routes->group('admin', ['filter' => 'adminAuth'], static function ($routes) {
   $routes->group('pelayanan', static function ($routes) {
     $routes->get('/', 'Admin::pelayanan_page');
     $routes->get('get_pelayanan', 'Admin::get_pelayanan');
+
+    // Master form dinamis per pelayanan
+    $routes->get('form/(:num)', 'Admin::pelayanan_form_page/$1');
+    $routes->get('get_fields', 'Admin::get_pelayanan_fields');
+    $routes->post('set_field', 'Admin::set_pelayanan_field');
+    $routes->post('update_field', 'Admin::update_pelayanan_field');
+    $routes->post('update_field_status', 'Admin::update_status_pelayanan_field');
+    $routes->post('del_field', 'Admin::del_pelayanan_field');
+
     $routes->post('update_status', 'Admin::update_status_pelayanan');
     $routes->post('del_pelayanan', 'Admin::del_pelayanan');
     $routes->post('set_pelayanan', 'Admin::set_pelayanan');
@@ -179,7 +188,6 @@ $routes->group('admin', ['filter' => 'adminAuth'], static function ($routes) {
     $routes->post('del_peralatan', 'Admin::del_peralatan');
     $routes->post('set_peralatan', 'Admin::set_peralatan');
     $routes->post('update_peralatan', 'Admin::update_peralatan');
-    
   });
 
   // menu aula
@@ -228,13 +236,6 @@ $routes->group('operator', ['filter' => 'operatorAuth'], static function ($route
   $routes->get('dashboard/get_user', 'Operator::orders_user');
   $routes->get('profile', 'Admin::profile_page');
   $routes->get('print_tiket/(:num)/(:alphanum)', 'Admin::print_tiket/$1/$2');
-  // menu aula (operator butuh list aula untuk form peminjaman)
-  $routes->group('aula', static function ($routes) {
-    $routes->get('get_aula', 'Admin::get_aula');
-  });
-  $routes->group('peralatan', function($routes) {
-    $routes->get('get_peralatan', 'Admin::get_peralatan');
-  });
 
   $routes->group('tiket', static function ($routes) {
     $routes->get('/', 'Admin::tiket_page');
@@ -308,10 +309,6 @@ $routes->group('verifikator', ['filter' => 'verifikatorAuth'], static function (
   $routes->get('dashboard/get_user', 'Operator::orders_user');
   $routes->get('profile', 'Admin::profile_page');
   $routes->get('print_tiket/(:num)/(:alphanum)', 'Admin::print_tiket/$1/$2');
-
-  $routes->group('aula', static function ($routes) {
-    $routes->get('get_aula', 'Admin::get_aula');
-  });
 
   $routes->group('tiket', static function ($routes) {
     $routes->get('/', 'Admin::tiket_page');
@@ -452,6 +449,10 @@ $routes->group('form', ['filter' => 'usersAuth'], static function ($routes) {
   $routes->get('sertifikat-tte', 'Form::tte_page');
   $routes->get('pendampingan-aplikasi', 'Form::app_page');
   $routes->get('pengaduan-jaringan', 'Form::jaringan_page');
+
+  // fallback form dinamis dari DB
+  $routes->get('(:segment)', 'Form::dynamic/$1');
+  $routes->post('submit/(:segment)', 'Form::submit_dynamic/$1');
 });
 
 $routes->group('detail', ['filter' => 'usersAuth'], static function ($routes) {
@@ -466,6 +467,8 @@ $routes->group('detail', ['filter' => 'usersAuth'], static function ($routes) {
   $routes->get('pelaratan-zoom/(:num)/(:alphanum)', 'Detail::alat_page/$1/$2');
 
   $routes->get('magang/(:num)/(:alphanum)', 'Detail::magang_page/$1/$2');
+  // fallback detail dinamis dari DB
+  $routes->get('(:segment)/(:num)/(:alphanum)', 'Detail::dynamic_page/$1/$2/$3');
   $routes->post('magang/get_history', 'Detail::get_magang_history');
 
   $routes->post('get_history', 'Detail::get_list_history');

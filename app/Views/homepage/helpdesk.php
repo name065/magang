@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row align-items-center">
-                                        <label class="col-md-12 text-md-left text-left">Id Chat Telegram</label>
+                                        <label class="col-md-12 text-md-left text-left">Email</label>
                                         <div class="col-lg-12 col-md-12">
                                             <input type="text" id="meeting_id" class="form-control">
                                             <small class="text-danger">*Balasan dan perkembangan status laporan akan

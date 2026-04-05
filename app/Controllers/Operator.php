@@ -87,7 +87,7 @@ class Operator extends BaseController
 
         echo json_encode($data);
     }
-
+    
     public function orders_tiket()
     {
         $tgl = date("Y-m-d H:i:s");

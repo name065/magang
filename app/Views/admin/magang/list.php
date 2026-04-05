@@ -214,24 +214,43 @@ function reset_class() {
 }
 
 function get_pelayanan() {
-    $.ajax({
-        url: "<?= base_url() ?>/<?= session()->get('role') ?>/magang/get_opd",
-        type: "GET",
-        dataType: "JSON",
-        async: false,
-        success: function(data) {
-            // console.log(data);
-            var baris = "";
-            for ($x = 0; $x < data.length; $x++) {
-                baris += '<option value="' + data[$x].id_opd + '">' + data[$x].nama_opd + '</option>';
-            }
-            document.getElementById("myPelayanan").innerHTML = baris;
-            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-            $('#myPelayanan').select2({
-                dropdownParent: $('#tiketModal')
-            });
-        },
-    });
+  $.ajax({
+    url: "<?= base_url() ?>/<?= session()->get('role') ?>/magang/get_opd",
+    type: "GET",
+    dataType: "JSON",
+    success: function(data) {
+      const $sel = $('#myPelayanan');
+
+      // kalau select2 sudah aktif, matikan dulu
+      if ($sel.hasClass("select2-hidden-accessible")) {
+        $sel.select2('destroy');
+      }
+
+      // kosongkan option lama
+      $sel.empty();
+
+      // (opsional) placeholder
+      $sel.append(new Option('-- Pilih Tujuan Instansi --', '', true, true));
+
+      // isi option baru
+      data.forEach(function(row) {
+        $sel.append(new Option(row.nama_opd, row.id_opd));
+      });
+
+      // aktifkan select2 lagi
+      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+      $sel.select2({
+        dropdownParent: $('#tiketModal'),
+        width: '100%'
+      });
+
+      // paksa refresh tampilan
+      $sel.trigger('change');
+    },
+    error: function(xhr) {
+      console.log("AJAX ERROR:", xhr.status, xhr.responseText);
+    }
+  });
 }
 
 function refresh_table($id, $status) {

@@ -1,176 +1,101 @@
 <?= $this->extend('layout/admin') ?>
 <?= $this->section('content') ?>
 
-<style>
-    /* Tiket Page Styles */
-    .tiket-header {
-        background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
-        margin: -30px -30px 28px -30px;
-        padding: 22px 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .tiket-header h1 {
-        font-size: 19px;
-        font-weight: 700;
-        color: #fff;
-        margin: 0;
-    }
-    .tiket-header .breadcrumb-indigo {
-        font-size: 12px;
-        color: rgba(255,255,255,0.75);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        background: transparent;
-    }
-    .tiket-header .breadcrumb-indigo a { color: rgba(255,255,255,0.85); text-decoration: none; }
-    .tiket-header .breadcrumb-indigo a:hover { color: #fff; }
-    .tiket-header .breadcrumb-indigo .sep { opacity: 0.5; }
-
-    .tiket-body { padding: 28px; background: #f5f6fa; min-height: calc(100vh - 130px); }
-
-    /* Tab pills indigo */
-    .nav-pills-indigo .nav-link {
-        font-size: 13px;
-        font-weight: 600;
-        color: #64748b;
-        border-radius: 10px;
-        padding: 8px 16px;
-        transition: all 0.2s;
-    }
-    .nav-pills-indigo .nav-link:hover { color: #6366f1; background: #eef2ff; }
-    .nav-pills-indigo .nav-link.active {
-        background: linear-gradient(135deg, #6366f1, #818cf8);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(99,102,241,0.3);
-    }
-    .nav-pills-indigo .badge {
-        font-size: 10px;
-        border-radius: 20px;
-        padding: 2px 7px;
-        margin-left: 4px;
-    }
-    .nav-pills-indigo .nav-link.active .badge { background: rgba(255,255,255,0.25); }
-    .nav-pills-indigo .nav-link:not(.active) .badge { background: #e8ebf4; color: #475569; }
-
-    .tiket-card {
-        background: #fff;
-        border: none;
-        border-radius: 16px;
-        box-shadow: 0 2px 14px rgba(0,0,0,0.06);
-        overflow: hidden;
-    }
-    .tiket-card .card-header-custom {
-        padding: 16px 20px;
-        border-bottom: 1px solid #f1f5f9;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .tiket-card .card-header-custom h4 {
-        font-size: 15px;
-        font-weight: 700;
-        color: #1e293b;
-        margin: 0;
-    }
-    .btn-indigo {
-        background: linear-gradient(135deg, #6366f1, #818cf8);
-        border: none;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 8px 18px;
-        border-radius: 10px;
-        box-shadow: 0 4px 14px rgba(99,102,241,0.3);
-        transition: all 0.2s;
-    }
-    .btn-indigo:hover { color: #fff; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(99,102,241,0.4); }
-</style>
-
 <div class="main-content">
-<section class="section">
-
-    <!-- Indigo Header -->
-    <div class="tiket-header">
-        <div>
-            <h1><i class="fas fa-ticket-alt mr-2" style="font-size:17px;"></i>Daftar Tiket</h1>
-            <ol class="breadcrumb-indigo mt-1">
-                <li><a href="<?= base_url() ?>/<?= session()->get('role') ?>/dashboard">Dashboard</a></li>
-                <li><span class="sep">›</span></li>
-                <li>Tiket</li>
-            </ol>
+    <section class="section">
+        <div class="section-header">
+            <h1>Halaman Tiket</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a
+                        href="<?= base_url() ?>/<?= session()->get('role') ?>/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="<?= base_url() ?>/<?= session()->get('role') ?>/tiket">Tiket</a>
+                </div>
+                <div class="breadcrumb-item">Daftar Tiket</div>
+            </div>
         </div>
-    </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-sm-6">
+                                    <ul class="nav nav-pills">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="proses_tab"
+                                                onclick="refresh_table('proses',0)" href="javascript:void(0)">Proses
+                                                <span class="badge badge-white" id="proses_count">0</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="selesai_tab" onclick="refresh_table('selesai',1)"
+                                                href="javascript:void(0)">Selesai <span class="badge badge-primary"
+                                                    id="selesai_count">0</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="ditolak_tab" onclick="refresh_table('ditolak',2)"
+                                                href="javascript:void(0)">Ditolak <span class="badge badge-primary"
+                                                    id="ditolak_count">0</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="batal_tab" onclick="refresh_table('batal',3)"
+                                                href="javascript:void(0)">Dibatalkan <span class="badge badge-primary"
+                                                    id="batal_count">0</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="semua_tab" onclick="refresh_table('semua',4)"
+                                                href="javascript:void(0)">Semua <span class="badge badge-primary"
+                                                    id="semua_count">0</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xl-6 col-sm-6">
+                                    <div class="row d-flex justify-content-end">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <input type="text" onchange="get_data()" class="form-control"
+                                                    id="datepicker">
+                                                <small>Kategori Tahun</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Daftar Tiket</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-end mb-4">
+                                <button onclick="open_modal()" class="btn btn-primary">Buat Tiket</button>
+                            </div>
 
-    <!-- Tab Filter -->
-    <div class="mb-3 d-flex align-items-center justify-content-between flex-wrap" style="gap:12px;">
-        <ul class="nav nav-pills-indigo" style="gap:4px; flex-wrap:wrap;">
-            <li class="nav-item">
-                <a class="nav-link active" id="proses_tab" onclick="refresh_table('proses',0)" href="javascript:void(0)">
-                    Proses <span class="badge" id="proses_count">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="selesai_tab" onclick="refresh_table('selesai',1)" href="javascript:void(0)">
-                    Selesai <span class="badge" id="selesai_count">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="ditolak_tab" onclick="refresh_table('ditolak',2)" href="javascript:void(0)">
-                    Ditolak <span class="badge" id="ditolak_count">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="batal_tab" onclick="refresh_table('batal',3)" href="javascript:void(0)">
-                    Dibatalkan <span class="badge" id="batal_count">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="semua_tab" onclick="refresh_table('semua',4)" href="javascript:void(0)">
-                    Semua <span class="badge" id="semua_count">0</span>
-                </a>
-            </li>
-        </ul>
+                            <div class="clearfix mb-3"></div>
 
-        <!-- Year picker -->
-        <div class="form-group mb-0" style="min-width:130px;">
-            <input type="text" onchange="get_data()" class="form-control" id="datepicker"
-                style="border-radius:10px; border:1.5px solid #e0e4f0; font-size:13px; padding:8px 12px;">
-            <small class="text-muted" style="font-size:11px;">Filter Tahun</small>
+                            <div class="">
+                                <table id="example" class="table table-striped table-bordered nowrap"
+                                    style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode Tiket</th>
+                                            <th>Pembuat</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Table Card -->
-    <div class="tiket-card">
-        <div class="card-header-custom">
-            <h4><i class="fas fa-list-ul mr-2" style="color:#6366f1;"></i>Tabel Tiket</h4>
-            <button onclick="open_modal()" class="btn btn-indigo">
-                <i class="fas fa-plus mr-1"></i> Buat Tiket
-            </button>
-        </div>
-        <div class="card-body" style="padding:20px;">
-            <table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Kode Tiket</th>
-                        <th>Pembuat</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-
-</section>
+    </section>
 </div>
-
-
 
 
 <!-- Modal Ubah Foto -->
@@ -231,10 +156,8 @@ function get_pelayanan() {
         success: function(data) {
             var baris = "";
             for ($x = 0; $x < data.length; $x++) {
-                if (data[$x].id_pelayanan != 13) {
-                    baris += '<option value="' + data[$x].route + '">' + data[$x].nama_pelayanan +
-                        '</option>';
-                }
+                baris += '<option value="' + data[$x].route + '">' + data[$x].nama_pelayanan +
+                    '</option>';
             }
             document.getElementById("myPelayanan").innerHTML = baris;
             $.fn.modal.Constructor.prototype.enforceFocus = function() {};
@@ -247,10 +170,34 @@ function get_pelayanan() {
 }
 
 function refresh_table($id, $status) {
-    ['proses_tab','selesai_tab','ditolak_tab','batal_tab','semua_tab'].forEach(function(id){
-        document.getElementById(id).classList.remove('active');
-    });
-    document.getElementById($id + '_tab').classList.add('active');
+    document.getElementById('proses_tab').classList.remove("active");
+    document.getElementById('selesai_tab').classList.remove("active");
+    document.getElementById('ditolak_tab').classList.remove("active");
+    document.getElementById('batal_tab').classList.remove("active");
+    document.getElementById('semua_tab').classList.remove("active");
+
+    document.getElementById('proses_count').classList.remove("badge-white");
+    document.getElementById('selesai_count').classList.remove("badge-white");
+    document.getElementById('ditolak_count').classList.remove("badge-white");
+    document.getElementById('batal_count').classList.remove("badge-white");
+    document.getElementById('semua_count').classList.remove("badge-white");
+
+    document.getElementById('proses_count').classList.remove("badge-primary");
+    document.getElementById('selesai_count').classList.remove("badge-primary");
+    document.getElementById('ditolak_count').classList.remove("badge-primary");
+    document.getElementById('batal_count').classList.remove("badge-primary");
+    document.getElementById('semua_count').classList.remove("badge-primary");
+
+    document.getElementById('proses_count').classList.add("badge-primary");
+    document.getElementById('selesai_count').classList.add("badge-primary");
+    document.getElementById('ditolak_count').classList.add("badge-primary");
+    document.getElementById('batal_count').classList.add("badge-primary");
+    document.getElementById('semua_count').classList.add("badge-primary");
+
+    document.getElementById($id + "_tab").classList.add("active");
+    document.getElementById($id + "_count").classList.remove("badge-primary");
+    document.getElementById($id + "_count").classList.add("badge-white");
+
     status = $status;
     get_data();
 }

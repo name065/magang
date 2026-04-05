@@ -1,0 +1,8 @@
+CRITICAL - 2026-02-27 23:15:29 --> Undefined index: email
+#0 C:\Users\LOQ\Music\Peluit\app\Controllers\Auth.php(70): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\Users\\LOQ\\Mu...', 70, Array)
+#1 C:\Users\LOQ\Music\Peluit\system\CodeIgniter.php(824): App\Controllers\Auth->get_username()
+#2 C:\Users\LOQ\Music\Peluit\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#3 C:\Users\LOQ\Music\Peluit\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\Users\LOQ\Music\Peluit\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 C:\Users\LOQ\Music\Peluit\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#6 {main}

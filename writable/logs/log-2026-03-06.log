@@ -1,0 +1,309 @@
+ERROR - 2026-03-06 00:10:02 --> ErrorException: pg_query(): Query failed: ERROR:  column ssuser.id_chat does not exist
+LINE 1: SELECT &quot;ssuser&quot;.&quot;id_chat&quot;
+               ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #156, 'SELECT "ssuser"...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT "ssuser"...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT "ssuser"...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT "ssuser"...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Form.php(1199): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Form.php(542): App\Controllers\Form->notification(6)
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Form->add_aula()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#12 {main}
+CRITICAL - 2026-03-06 00:10:02 --> pg_query(): Query failed: ERROR:  column ssuser.id_chat does not exist
+LINE 1: SELECT &quot;ssuser&quot;.&quot;id_chat&quot;
+               ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #156, 'SELECT "ssuser"...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT "ssuser"...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT "ssuser"...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT "ssuser"...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Form.php(1199): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Form.php(542): App\Controllers\Form->notification(6)
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Form->add_aula()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#12 {main}
+CRITICAL - 2026-03-06 00:10:02 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-03-06 00:10:55 --> ErrorException: pg_query(): Query failed: ERROR:  column &quot;is_visible&quot; does not exist
+LINE 4: AND &quot;is_visible&quot; = 1
+            ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(934): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:10:55 --> pg_query(): Query failed: ERROR:  column &quot;is_visible&quot; does not exist
+LINE 4: AND &quot;is_visible&quot; = 1
+            ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(934): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:10:55 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-03-06 00:10:57 --> ErrorException: pg_query(): Query failed: ERROR:  relation &quot;tb_tiket_upload&quot; does not exist
+LINE 2: FROM &quot;tb_tiket_upload&quot;
+             ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(210): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Detail.php(200): CodeIgniter\BaseModel->first()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Detail->upload_page('122', 'AE2N63LUL1E98IN...')
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Detail))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:10:57 --> pg_query(): Query failed: ERROR:  relation &quot;tb_tiket_upload&quot; does not exist
+LINE 2: FROM &quot;tb_tiket_upload&quot;
+             ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(210): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Detail.php(200): CodeIgniter\BaseModel->first()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Detail->upload_page('122', 'AE2N63LUL1E98IN...')
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Detail))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+ERROR - 2026-03-06 00:11:00 --> ErrorException: pg_query(): Query failed: ERROR:  column &quot;is_visible&quot; does not exist
+LINE 4: AND &quot;is_visible&quot; = 1
+            ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(934): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:11:00 --> pg_query(): Query failed: ERROR:  column &quot;is_visible&quot; does not exist
+LINE 4: AND &quot;is_visible&quot; = 1
+            ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(934): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:11:00 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-03-06 00:11:20 --> ErrorException: pg_query(): Query failed: ERROR:  relation &quot;sspelayanan_field&quot; does not exist
+LINE 2: FROM &quot;sspelayanan_field&quot;
+             ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(963): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan_fields()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:11:20 --> pg_query(): Query failed: ERROR:  relation &quot;sspelayanan_field&quot; does not exist
+LINE 2: FROM &quot;sspelayanan_field&quot;
+             ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(963): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan_fields()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:11:20 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-03-06 00:12:07 --> ErrorException: pg_query(): Query failed: ERROR:  relation &quot;sspelayanan_field&quot; does not exist
+LINE 2: FROM &quot;sspelayanan_field&quot;
+             ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(963): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan_fields()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:12:07 --> pg_query(): Query failed: ERROR:  relation &quot;sspelayanan_field&quot; does not exist
+LINE 2: FROM &quot;sspelayanan_field&quot;
+             ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(963): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan_fields()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:12:07 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-03-06 00:12:17 --> ErrorException: pg_query(): Query failed: ERROR:  column &quot;is_visible&quot; does not exist
+LINE 4: AND &quot;is_visible&quot; = 1
+            ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(934): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:12:17 --> pg_query(): Query failed: ERROR:  column &quot;is_visible&quot; does not exist
+LINE 4: AND &quot;is_visible&quot; = 1
+            ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(183): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(584): CodeIgniter\Model->doFindAll(0, 0)
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(934): CodeIgniter\BaseModel->findAll()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->get_pelayanan()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-03-06 00:12:17 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}

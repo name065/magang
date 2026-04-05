@@ -123,7 +123,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <img class="img-fluid" src="<?= base_url('assets/image/id_chat.png') ?>" />
+                        <img class="img-fluid" src="<?= base_url('assets/image/email.png') ?>" />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>

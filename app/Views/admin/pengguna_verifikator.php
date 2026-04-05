@@ -440,7 +440,7 @@ function get_data() {
 
 function get_opd() {
     $.ajax({
-        url: "<?= base_url() ?>/admin/pelayanan/get_pelayanan",
+        url: "<?= base_url() ?>/admin/pelayanan/get_pelayanan?mode=all",
         type: "GET",
         dataType: "JSON",
         async: false,

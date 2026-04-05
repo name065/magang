@@ -164,8 +164,8 @@ function refresh_table($id, $status) {
 
 }
 
-function open_modal_id_chat($id, $id_chat) {
-    document.getElementById('id_chat_ubah').value = $id_chat;
+function open_modal_id_chat($id, $email) {
+    document.getElementById('id_chat_ubah').value = $email;
     document.getElementById("ubah_tombol").innerHTML =
         '<button onclick="update_id_chat(' + $id + ')" type="button" class="btn btn-primary">Simpan</button>';
     $('#idChatModal').modal('show');
@@ -243,7 +243,7 @@ function get_data() {
                     button +=
                         '<div class="text-small text-muted">' + data +
                         ' <div class="bullet"></div> <span class="text-primary">' +
-                        row.id_chat + '</span>';
+                        row.email + '</span>';
 
                     if (row.active == 1) {
                         button +=
@@ -330,8 +330,8 @@ function get_data() {
 
                     } else {
                         var button =
-                            '<button data-toggle="tooltip" data-placement="top" title="Ubah Id Chat Telegram" onclick="open_modal_id_chat(' +
-                            data + ',' + row.id_chat +
+                            '<button data-toggle="tooltip" data-placement="top" title="Ubah Email" onclick="open_modal_id_chat(' +
+                            data + ',' + row.email +
                             ')" class="btn btn-icon btn-primary mr-2"><i class="fas fa-key"></i></button>';
                         if (row.active == 1) {
                             button +=
@@ -413,7 +413,7 @@ function update_active($status, $id) {
 function update_id_chat($id) {
     var formData = new FormData();
     formData.append('id_ssuser', $id);
-    formData.append('id_chat', document.getElementById("id_chat_ubah").value);
+    formData.append('email', document.getElementById("id_chat_ubah").value);
 
     $.ajax({
         url: "<?= base_url() ?>/admin/pengguna/update_id_chat",

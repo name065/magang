@@ -219,14 +219,14 @@
                                 <form>
                                     <div class="form-group">
                                         <div class="d-block">
-                                            <label>Id Chat Telegram</label>
+                                            <label>Email</label>
                                             <div class="float-right">
                                                 <a href="#" class="text-small">
                                                     Apa itu Id Chat ?
                                                 </a>
                                             </div>
                                         </div>
-                                        <input id="id_chat" type="number" class="form-control" name="username"
+                                        <input id="email" type="email" class="form-control" name="username"
                                             tabindex="1" required autofocus>
                                     </div>
                                     <div class="d-flex justify-content-center mb-3 mt-4">
@@ -518,15 +518,15 @@ function back_otp() {
 }
 
 function send_otp() {
-    if (document.getElementById("id_chat").value == "") {
-        document.getElementById("id_chat").focus();
+    if (document.getElementById("email").value == "") {
+        document.getElementById("email").focus();
         Swal.fire(
             'Gagal',
             "Form Id Chat Kosong !",
             'error'
         );
-    } else if (document.getElementById("id_chat").value.match(/^[0-9]+$/) == null) {
-        document.getElementById("id_chat").focus();
+    } else if (document.getElementById("email").value.match(/^[0-9]+$/) == null) {
+        document.getElementById("email").focus();
         Swal.fire(
             'Gagal',
             "Format Id Chat Salah !",
@@ -538,7 +538,7 @@ function send_otp() {
         otp = randomString();
 
         var formData = new FormData();
-        formData.append('id_chat', document.getElementById("id_chat").value);
+        formData.append('email', document.getElementById("email").value);
         formData.append('otp', otp);
 
         $.ajax({
@@ -625,7 +625,7 @@ function ssregister() {
         formData.append('jurusan', document.getElementById("jurusan").value);
         formData.append('univ', document.getElementById("univ").value);
 
-        formData.append('id_chat', document.getElementById("id_chat").value);
+        formData.append('email', document.getElementById("email").value);
 
         formData.append('foto', document.getElementById("foto").files[0]);
         formData.append('ktp', document.getElementById("ktp").files[0]);

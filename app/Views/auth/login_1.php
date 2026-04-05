@@ -35,7 +35,7 @@
                 <h2 class="form_title title">Form Register</h2>
                 <input class="form__input" id="form_nik" type="number" placeholder="NIK">
                 <input class="form__input" id="form_nama" type="text" placeholder="Nama">
-                <input class="form__input" id="form_id_chat" type="number" placeholder="Id Chat Telegram">
+                <input class="form__input" id="form_id_chat" type="number" placeholder="Email">
 
                 <button class="form__button button submit">SIGN UP</button>
             </form>
