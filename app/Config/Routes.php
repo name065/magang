@@ -173,6 +173,9 @@ $routes->group('admin', ['filter' => 'adminAuth'], static function ($routes) {
     $routes->post('update_field', 'Admin::update_pelayanan_field');
     $routes->post('update_field_status', 'Admin::update_status_pelayanan_field');
     $routes->post('del_field', 'Admin::del_pelayanan_field');
+    $routes->get('get_icon', 'Admin::get_pelayanan_icon');
+    $routes->post('save_icon', 'Admin::save_pelayanan_icon');
+    $routes->post('suggest_icon', 'Admin::suggest_pelayanan_icon');
 
     $routes->post('update_status', 'Admin::update_status_pelayanan');
     $routes->post('del_pelayanan', 'Admin::del_pelayanan');

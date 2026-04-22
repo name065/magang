@@ -97,15 +97,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Ubah Id Chat</h5>
+                <h5 class="modal-title">Form Ubah Kontak</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Id Chat</label>
-                    <input id="id_chat_ubah" type="number" class="form-control">
+                    <label>Kontak (Email / Id Chat)</label>
+                    <input id="id_chat_ubah" type="text" class="form-control">
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
@@ -330,8 +330,8 @@ function get_data() {
 
                     } else {
                         var button =
-                            '<button data-toggle="tooltip" data-placement="top" title="Ubah Email" onclick="open_modal_id_chat(' +
-                            data + ',' + row.email +
+                            '<button data-toggle="tooltip" data-placement="top" title="Ubah Kontak" onclick="open_modal_id_chat(' +
+                            data + ", '" + row.email + "'" +
                             ')" class="btn btn-icon btn-primary mr-2"><i class="fas fa-key"></i></button>';
                         if (row.active == 1) {
                             button +=

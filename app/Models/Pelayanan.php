@@ -13,5 +13,5 @@ class Pelayanan extends Model
     // NOTE:
     // - is_visible: tampil di dropdown pemilihan pelayanan (default 1)
     // - is_dynamic: form pelayanan dibangun dari DB (master field) (default 0)
-    protected $allowedFields = ['id_opd', 'nama_pelayanan', 'route','url', 'file_foto', 'active', 'tgl_input','deskripsi', 'is_visible', 'is_dynamic'];
+    protected $allowedFields = ['id_opd', 'nama_pelayanan', 'route', 'url', 'file_foto', 'active', 'tgl_input', 'deskripsi', 'is_visible', 'is_dynamic', 'icon_mode', 'iconify_name', 'icon_color', 'icon_bg_color', 'icon_updated_at'];
 }

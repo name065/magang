@@ -1,0 +1,183 @@
+ERROR - 2026-04-16 01:28:34 --> Email: sendWithSmtp throwed fsockopen(): unable to connect to smtp.gmail.com:587 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+)
+ERROR - 2026-04-16 01:29:23 --> Email: sendWithSmtp throwed fsockopen(): unable to connect to smtp.gmail.com:587 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+)
+ERROR - 2026-04-16 01:33:29 --> ErrorException: pg_query(): Query failed: ERROR:  update or delete on table &quot;sspelayanan&quot; violates foreign key constraint &quot;tb_tiket_id_pelayanan_fkey&quot; on table &quot;tb_tiket&quot;
+DETAIL:  Key (id_pelayanan)=(18) is still referenced from table &quot;tb_tiket&quot;. in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'DELETE FROM "ss...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('DELETE FROM "ss...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('DELETE FROM "ss...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(2213): CodeIgniter\Database\BaseConnection->query('DELETE FROM "ss...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Builder.php(204): CodeIgniter\Database\BaseBuilder->delete('', NULL, true)
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(359): CodeIgniter\Database\Postgre\Builder->delete()
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(963): CodeIgniter\Model->doDelete(NULL, false)
+#8 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(1276): CodeIgniter\BaseModel->delete()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->del_pelayanan()
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#14 {main}
+CRITICAL - 2026-04-16 01:33:29 --> pg_query(): Query failed: ERROR:  update or delete on table &quot;sspelayanan&quot; violates foreign key constraint &quot;tb_tiket_id_pelayanan_fkey&quot; on table &quot;tb_tiket&quot;
+DETAIL:  Key (id_pelayanan)=(18) is still referenced from table &quot;tb_tiket&quot;.
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'DELETE FROM "ss...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('DELETE FROM "ss...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('DELETE FROM "ss...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(2213): CodeIgniter\Database\BaseConnection->query('DELETE FROM "ss...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Builder.php(204): CodeIgniter\Database\BaseBuilder->delete('', NULL, true)
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(359): CodeIgniter\Database\Postgre\Builder->delete()
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(963): CodeIgniter\Model->doDelete(NULL, false)
+#8 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(1276): CodeIgniter\BaseModel->delete()
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->del_pelayanan()
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#14 {main}
+CRITICAL - 2026-04-16 01:33:29 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-04-16 01:34:27 --> ErrorException: pg_query(): Query failed: ERROR:  relation &quot;tb_tiket_hosting&quot; does not exist
+LINE 1: INSERT INTO &quot;tb_tiket_hosting&quot; (&quot;id_tiket&quot;, &quot;nama_aplikasi&quot;,...
+                    ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #156, 'INSERT INTO "tb...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('INSERT INTO "tb...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "tb...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1759): CodeIgniter\Database\BaseConnection->query('INSERT INTO "tb...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(239): CodeIgniter\Database\BaseBuilder->insert()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(738): CodeIgniter\Model->doInsert(Array)
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#8 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Form.php(791): CodeIgniter\Model->insert(Array)
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Form->add_hosting()
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#14 {main}
+CRITICAL - 2026-04-16 01:34:27 --> pg_query(): Query failed: ERROR:  relation &quot;tb_tiket_hosting&quot; does not exist
+LINE 1: INSERT INTO &quot;tb_tiket_hosting&quot; (&quot;id_tiket&quot;, &quot;nama_aplikasi&quot;,...
+                    ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #156, 'INSERT INTO "tb...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('INSERT INTO "tb...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "tb...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1759): CodeIgniter\Database\BaseConnection->query('INSERT INTO "tb...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(239): CodeIgniter\Database\BaseBuilder->insert()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(738): CodeIgniter\Model->doInsert(Array)
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#8 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Form.php(791): CodeIgniter\Model->insert(Array)
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Form->add_hosting()
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#14 {main}
+CRITICAL - 2026-04-16 01:34:27 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-04-16 01:34:33 --> ErrorException: pg_query(): Query failed: ERROR:  relation &quot;tb_tiket_hosting&quot; does not exist
+LINE 2: FROM &quot;tb_tiket_hosting&quot;
+             ^ in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(210): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Detail.php(234): CodeIgniter\BaseModel->first()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Detail->hosting_page('138', '9OFDI686TBCNF8W...')
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Detail))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+CRITICAL - 2026-04-16 01:34:33 --> pg_query(): Query failed: ERROR:  relation &quot;tb_tiket_hosting&quot; does not exist
+LINE 2: FROM &quot;tb_tiket_hosting&quot;
+             ^
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'SELECT *\nFROM "...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('SELECT *\nFROM "...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM "...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1443): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(210): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#7 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Detail.php(234): CodeIgniter\BaseModel->first()
+#8 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Detail->hosting_page('138', '9OFDI686TBCNF8W...')
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Detail))
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#13 {main}
+ERROR - 2026-04-16 01:41:11 --> ErrorException: pg_query(): Query failed: ERROR:  duplicate key value violates unique constraint &quot;ssuser_pkey&quot;
+DETAIL:  Key (id_ssuser)=(23) already exists. in C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php:136
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'INSERT INTO "ss...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('INSERT INTO "ss...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "ss...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1759): CodeIgniter\Database\BaseConnection->query('INSERT INTO "ss...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(239): CodeIgniter\Database\BaseBuilder->insert()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(738): CodeIgniter\Model->doInsert(Array)
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#8 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(668): CodeIgniter\Model->insert(Array)
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->set_verifikator()
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#14 {main}
+CRITICAL - 2026-04-16 01:41:11 --> pg_query(): Query failed: ERROR:  duplicate key value violates unique constraint &quot;ssuser_pkey&quot;
+DETAIL:  Key (id_ssuser)=(23) already exists.
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'pg_query(): Que...', 'C:\\Users\\LOQ\\Mu...', 136, Array)
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\Database\Postgre\Connection.php(136): pg_query(Resource id #155, 'INSERT INTO "ss...')
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(670): CodeIgniter\Database\Postgre\Connection->execute('INSERT INTO "ss...')
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "ss...')
+#4 C:\Users\LOQ\Music\Peluit - Copy\system\Database\BaseBuilder.php(1759): CodeIgniter\Database\BaseConnection->query('INSERT INTO "ss...', Array, false)
+#5 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(239): CodeIgniter\Database\BaseBuilder->insert()
+#6 C:\Users\LOQ\Music\Peluit - Copy\system\BaseModel.php(738): CodeIgniter\Model->doInsert(Array)
+#7 C:\Users\LOQ\Music\Peluit - Copy\system\Model.php(620): CodeIgniter\BaseModel->insert(Array, true)
+#8 C:\Users\LOQ\Music\Peluit - Copy\app\Controllers\Admin.php(668): CodeIgniter\Model->insert(Array)
+#9 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(824): App\Controllers\Admin->set_verifikator()
+#10 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(410): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin))
+#11 C:\Users\LOQ\Music\Peluit - Copy\system\CodeIgniter.php(318): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\Users\LOQ\Music\Peluit - Copy\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 C:\Users\LOQ\Music\Peluit - Copy\system\Commands\Server\rewrite.php(43): require_once('C:\\Users\\LOQ\\Mu...')
+#14 {main}
+CRITICAL - 2026-04-16 01:41:11 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\Users\LOQ\Music\Peluit - Copy\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\Users\LOQ\Music\Peluit - Copy\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\Users\LOQ\Music\Peluit - Copy\system\Debug\Exceptions.php(110): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2026-04-16 01:53:05 --> Email: sendWithSmtp throwed fsockopen(): unable to connect to smtp.gmail.com:587 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+)
+ERROR - 2026-04-16 01:53:28 --> Email: sendWithSmtp throwed fsockopen(): unable to connect to smtp.gmail.com:587 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+)

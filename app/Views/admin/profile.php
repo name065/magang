@@ -48,7 +48,7 @@
                             <div class="section-title">Id Chat</div>
                             <div class="form-group">
                                 <div class="input-group mb-3">
-                                    <input id="email" type="email" class="form-control" value="<?= $email ?>"
+                                    <input id="email" type="text" class="form-control" value="<?= $email ?>"
                                         placeholder="" aria-label="">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" onclick="ubah_telegram()"
@@ -127,7 +127,7 @@ function ubah_telegram() {
         Swal.fire({
             icon: 'error',
             title: 'Gagal...',
-            text: 'Form Id Chat Kosong !'
+            text: 'Form Kontak Kosong !'
         });
     } else {
         var formData = new FormData();

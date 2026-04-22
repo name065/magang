@@ -10,5 +10,5 @@ class User extends Model
     protected $primaryKey = 'id_ssuser';
 
     protected $useAutoIncrement = true;
-    protected $allowedFields = ['username', 'nip', 'nama' ,'nik', 'email', 'active', 'role_id',"file_foto","id_opd","tgl_input", "tgl_validasi"];
+    protected $allowedFields = ['username', 'nip', 'nama' ,'nik', 'email', 'id_chat', 'active', 'role_id',"file_foto","id_opd","tgl_input", "tgl_validasi"];
 }

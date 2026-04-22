@@ -23,6 +23,43 @@ class Admin extends BaseController
     {
         date_default_timezone_set('Asia/Jakarta');
     }
+
+    private function guessIconifyName(string $namaPelayanan): string
+    {
+        $nama = strtolower(trim($namaPelayanan));
+
+        $map = [
+            'zoom meeting' => 'mdi:video-outline',
+            'peralatan zoom' => 'mdi:microphone-outline',
+            'pinjam aula' => 'mdi:office-building-outline',
+            'aula' => 'mdi:office-building-outline',
+            'ruang' => 'mdi:office-building-outline',
+            'upload dokumen' => 'mdi:file-upload-outline',
+            'dokumen' => 'mdi:file-document-outline',
+            'hosting' => 'mdi:server-outline',
+            'subdomain' => 'mdi:web',
+            'sub-domain' => 'mdi:web',
+            'domain' => 'mdi:web',
+            'pengaduan jaringan' => 'mdi:wifi-alert',
+            'jaringan' => 'mdi:wifi-alert',
+            'sertifikat tte' => 'mdi:certificate-outline',
+            'tte' => 'mdi:certificate-outline',
+            'pendampingan aplikasi' => 'mdi:application-cog-outline',
+            'aplikasi' => 'mdi:application-cog-outline',
+            'pendampingan' => 'mdi:account-cog-outline',
+            'alat' => 'mdi:microphone-outline',
+            'peralatan' => 'mdi:microphone-outline',
+            'faq' => 'mdi:help-circle-outline',
+        ];
+
+        foreach ($map as $keyword => $icon) {
+            if (strpos($nama, $keyword) !== false) {
+                return $icon;
+            }
+        }
+
+        return 'mdi:shape-outline';
+    }
     
     public function index()
     {
@@ -149,21 +186,33 @@ class Admin extends BaseController
     public function orders_tiket_kalender()
     {
         $db = \Config\Database::connect();
-        $builder = $db->table('tb_tiket')->select('tb_tiket.id_tiket, tb_tiket.tgl_input as start, tb_tiket.tgl_input as end, sspelayanan.nama_pelayanan as description, ssopd.akronim_opd as title, tb_tiket.status, tb_tiket.status as color, sspelayanan.nama_pelayanan')->join('sspelayanan', 'sspelayanan.id_pelayanan = tb_tiket.id_pelayanan', 'left')->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')->where("date_part('month', tb_tiket.tgl_input)", date("m", strtotime($this->request->getVar('tgl'))))->where("date_part('year', tb_tiket.tgl_input)", date("Y", strtotime($this->request->getVar('tgl'))))->get()->getResult();
-        
-        foreach ($builder as $row)
-        {
-            if($row->status=="0"){
+        $builder = $db->table('tb_tiket')
+            ->select('tb_tiket.id_tiket, tb_tiket.tgl_input as start, tb_tiket.tgl_input as end, tb_tiket.tgl_input as tgl_pengajuan, tb_tiket.status, sspelayanan.nama_pelayanan as title, sspelayanan.deskripsi, ssopd.akronim_opd as instansi_pemohon')
+            ->join('sspelayanan', 'sspelayanan.id_pelayanan = tb_tiket.id_pelayanan', 'left')
+            ->join('ssuser', 'ssuser.id_ssuser = tb_tiket.id_user', 'left')
+            ->join('ssopd', 'ssopd.id_opd = ssuser.id_opd', 'left')
+            ->where("date_part('month', tb_tiket.tgl_input)", date("m", strtotime($this->request->getVar('tgl'))))
+            ->where("date_part('year', tb_tiket.tgl_input)", date("Y", strtotime($this->request->getVar('tgl'))))
+            ->get()->getResult();
+
+        foreach ($builder as $row) {
+            if ($row->status == "0") {
                 $row->color = "#3C75F0";
-            }elseif($row->status=="1"){
+                $row->status_text = "Proses";
+            } elseif ($row->status == "1") {
                 $row->color = "#0F6B35";
-            }elseif($row->status=="2"){
+                $row->status_text = "Selesai / Disetujui";
+            } elseif ($row->status == "2") {
                 $row->color = "#ff0000";
-            }else{
+                $row->status_text = "Ditolak";
+            } else {
                 $row->color = "#000000";
+                $row->status_text = "Dibatalkan";
             }
+
+            $row->description = $row->deskripsi;
         }
-       
+
         echo json_encode($builder);
     }
 
@@ -1111,20 +1160,144 @@ class Admin extends BaseController
         ]);
     }
 
-    public function del_pelayanan_field(){
+    public function del_pelayanan_field()
+    {
         $fieldModel = new PelayananField();
-        $id_field = $this->request->getVar('id_field');
+        $id_field = trim((string) $this->request->getVar('id_field'));
 
-        if (!$fieldModel->delete($id_field)) {
+        if ($id_field === '') {
+            return $this->response->setJSON([
+                'status'  => 400,
+                'message' => 'ID field tidak ditemukan.'
+            ]);
+        }
+
+        $field = $fieldModel->where('id_field', $id_field)->first();
+        if (!$field) {
+            return $this->response->setJSON([
+                'status'  => 404,
+                'message' => 'Field tidak ditemukan.'
+            ]);
+        }
+
+        try {
+            if (!$fieldModel->delete($id_field)) {
+                return $this->response->setJSON([
+                    'status'  => 500,
+                    'message' => 'Field gagal dihapus.'
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'status'  => 200,
+                'message' => 'Field berhasil dihapus.'
+            ]);
+        } catch (\Throwable $e) {
             return $this->response->setJSON([
                 'status'  => 500,
-                'message' => 'Field gagal dihapus.'
+                'message' => 'Field gagal dihapus: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function get_pelayanan_icon()
+    {
+        $pelayananModel = new Pelayanan();
+        $id = (int) $this->request->getGet('id_pelayanan');
+
+        $pelayanan = $pelayananModel->find($id);
+        if (!$pelayanan) {
+            return $this->response->setJSON([
+                'status' => 404,
+                'message' => 'Pelayanan tidak ditemukan.'
             ]);
         }
 
         return $this->response->setJSON([
-            'status'  => 200,
-            'message' => 'Field berhasil dihapus.'
+            'status' => 200,
+            'data' => $pelayanan
+        ]);
+    }
+
+    public function suggest_pelayanan_icon()
+    {
+        $nama = trim((string) $this->request->getVar('nama_pelayanan'));
+
+        return $this->response->setJSON([
+            'status' => 200,
+            'data' => [
+                'iconify_name' => $this->guessIconifyName($nama),
+                'icon_color' => '#4f46e5',
+                'icon_bg_color' => '#eef2ff',
+            ]
+        ]);
+    }
+
+    public function save_pelayanan_icon()
+    {
+        $pelayananModel = new Pelayanan();
+        $id = (int) $this->request->getVar('id_pelayanan');
+        $mode = trim((string) $this->request->getVar('icon_mode'));
+
+        $pelayanan = $pelayananModel->find($id);
+        if (!$pelayanan) {
+            return $this->response->setJSON([
+                'status' => 404,
+                'message' => 'Pelayanan tidak ditemukan.'
+            ]);
+        }
+
+        if (!in_array($mode, ['image', 'iconify'], true)) {
+            $mode = 'image';
+        }
+
+        $data = [
+            'icon_mode' => $mode,
+            'iconify_name' => trim((string) $this->request->getVar('iconify_name')),
+            'icon_color' => trim((string) $this->request->getVar('icon_color')) ?: '#4f46e5',
+            'icon_bg_color' => trim((string) $this->request->getVar('icon_bg_color')) ?: '#eef2ff',
+            'icon_updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        if ($mode === 'iconify' && empty($data['iconify_name'])) {
+            return $this->response->setJSON([
+                'status' => 400,
+                'message' => 'Nama icon Iconify wajib diisi.'
+            ]);
+        }
+
+        if ($mode === 'image') {
+            $file = $this->request->getFile('icon_file');
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $ext = strtolower((string) $file->getExtension());
+                $allowed = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
+
+                if (!in_array($ext, $allowed, true)) {
+                    return $this->response->setJSON([
+                        'status' => 400,
+                        'message' => 'Format icon tidak didukung. Gunakan png, jpg, jpeg, webp, atau svg.'
+                    ]);
+                }
+
+                $newName = $file->getRandomName();
+                $file->move(ROOTPATH . 'public/assets/image/logo_app/', $newName);
+
+                if (!empty($pelayanan['file_foto']) && $pelayanan['file_foto'] !== 'logokominfo.png') {
+                    $oldPath = ROOTPATH . 'public/assets/image/logo_app/' . $pelayanan['file_foto'];
+                    if (is_file($oldPath)) {
+                        @unlink($oldPath);
+                    }
+                }
+
+                $data['file_foto'] = $newName;
+            }
+        }
+
+        $pelayananModel->update($id, $data);
+
+        return $this->response->setJSON([
+            'status' => 200,
+            'message' => 'Icon layanan berhasil disimpan.'
         ]);
     }
 
@@ -1168,15 +1341,20 @@ class Admin extends BaseController
             $tgl = date("Y-m-d H:i:s");
             $data = [
                 'route' => $this->request->getVar('route'),
-                'nama_pelayanan'    => $this->request->getVar('nama_pelayanan'),
-                'url'    => $this->request->getVar('url'),
-                'deskripsi'    => $this->request->getVar('deskripsi'),
-                'file_foto'    => 'logokominfo.png',
-                'tgl_input'    => $tgl,
-                'active'    => 1,
-                'is_visible'    => 1,
-                'is_dynamic'    => 0,
-                'id_opd'    => $this->request->getVar('id_opd'),
+                'nama_pelayanan' => $this->request->getVar('nama_pelayanan'),
+                'url' => $this->request->getVar('url'),
+                'deskripsi' => $this->request->getVar('deskripsi'),
+                'file_foto' => 'logokominfo.png',
+                'tgl_input' => $tgl,
+                'active' => 1,
+                'is_visible' => 1,
+                'is_dynamic' => 0,
+                'id_opd' => $this->request->getVar('id_opd'),
+                'icon_mode' => 'iconify',
+                'iconify_name' => $this->guessIconifyName((string) $this->request->getVar('nama_pelayanan')),
+                'icon_color' => '#4f46e5',
+                'icon_bg_color' => '#eef2ff',
+                'icon_updated_at' => $tgl,
             ];
 
             $userModel->insert($data);

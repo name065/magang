@@ -216,6 +216,10 @@
                     <label>Instansi Pemohon</label>
                     <input type="text" id="modal_aula" class="form-control" disabled style="border-radius:10px;">
                 </div>
+                <div class="form-group">
+                    <label>Status Tiket</label>
+                    <input type="text" id="modal_status" class="form-control" disabled style="border-radius:10px;">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius:8px;">Tutup</button>
@@ -327,13 +331,16 @@ function change_calendar() {
                 initialDate: document.getElementById("tgl_now").value,
                 events: data,
                 eventClick: function(info) {
-                    const now_end = new Date(info.event.end);
-                    document.getElementById("modal_aula").value = info.event.title;
-                    document.getElementById("modal_tgl_akhir").value = moment(now_end).format('YYYY-MM-DDTHH:mm');
+                    const start = info.event.start ? info.event.start : new Date();
+                    const tglPengajuan = info.event.extendedProps?.tgl_pengajuan
+                        ? moment(info.event.extendedProps.tgl_pengajuan).toDate()
+                        : start;
+
+                    document.getElementById("modal_acara").value = info.event.title || '-';
+                    document.getElementById("modal_tgl_akhir").value = moment(tglPengajuan).format('YYYY-MM-DDTHH:mm');
+                    document.getElementById("modal_aula").value = info.event.extendedProps?.instansi_pemohon || '-';
+                    document.getElementById("modal_status").value = info.event.extendedProps?.status_text || '-';
                     $('#calendarModal').modal('show');
-                },
-                eventDidMount: function(info) {
-                    document.getElementById("modal_acara").value = info.event.extendedProps["description"];
                 },
             });
             calendar.render();

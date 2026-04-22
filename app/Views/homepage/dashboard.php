@@ -2,6 +2,7 @@
 <?= $this->section('content') ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
 
 <style>
 .hover-up {
@@ -45,6 +46,27 @@
     margin-bottom: 0 !important;
 }
 </style>
+
+<?php
+$renderServiceIcon = function(array $layanan, int $boxSize = 70, int $iconSize = 40, string $shape = 'circle') {
+    $iconMode = $layanan['icon_mode'] ?? 'image';
+    $iconifyName = $layanan['iconify_name'] ?? '';
+    $iconColor = $layanan['icon_color'] ?? '#4f46e5';
+    $iconBg = $layanan['icon_bg_color'] ?? '#eef2ff';
+    $fileFoto = !empty($layanan['file_foto']) ? $layanan['file_foto'] : 'logokominfo.png';
+    $radius = $shape === 'circle' ? '50%' : '15px';
+
+    if ($iconMode === 'iconify' && $iconifyName !== '') {
+        return '<div class="d-flex align-items-center justify-content-center shadow-sm" style="width:' . $boxSize . 'px;height:' . $boxSize . 'px;border-radius:' . $radius . ';background:' . esc($iconBg) . ';">'
+            . '<iconify-icon icon="' . esc($iconifyName) . '" width="' . $iconSize . '" height="' . $iconSize . '" style="color:' . esc($iconColor) . ';"></iconify-icon>'
+            . '</div>';
+    }
+
+    return '<div class="bg-light d-flex align-items-center justify-content-center shadow-sm" style="width:' . $boxSize . 'px;height:' . $boxSize . 'px;border-radius:' . $radius . ';">'
+        . '<img src="' . base_url('assets/image/logo_app/' . $fileFoto) . '" alt="Icon" style="width:' . $iconSize . 'px;height:' . $iconSize . 'px;object-fit:contain;">'
+        . '</div>';
+};
+?>
 
 <div class="main-content">
     <section class="section">
@@ -148,48 +170,67 @@
                     <div class="swiper mySwiper" id="services-swiper">
                         <div class="swiper-wrapper">
                             <?php foreach($list_pelayanan as $layanan): ?>
-                                <?php $urlPengajuan = base_url('pengajuan'); ?>
                                 <?php if($layanan['active'] == 1): ?>
                                 <div class="swiper-slide">
-                                    <a href="<?= $urlPengajuan . '?pelayanan=' . $layanan['id_pelayanan'] ?>" class="card shadow-sm h-100 hover-up border-0 mx-2 my-2 text-decoration-none" style="border-radius: 15px; cursor: pointer;">
+                                    <div class="card shadow-sm h-100 hover-up border-0 mx-2 my-2 text-decoration-none service-card"
+                                        style="border-radius: 15px; cursor: pointer;"
+                                        data-id="<?= (int)$layanan['id_pelayanan'] ?>"
+                                        data-name="<?= esc($layanan['nama_pelayanan'], 'attr') ?>"
+                                        data-desc="<?= esc($layanan['deskripsi'] ?? '', 'attr') ?>"
+                                        data-icon-mode="<?= esc($layanan['icon_mode'] ?? 'image', 'attr') ?>"
+                                        data-iconify="<?= esc($layanan['iconify_name'] ?? '', 'attr') ?>"
+                                        data-icon-color="<?= esc($layanan['icon_color'] ?? '#4f46e5', 'attr') ?>"
+                                        data-icon-bg="<?= esc($layanan['icon_bg_color'] ?? '#eef2ff', 'attr') ?>"
+                                        data-file="<?= esc($layanan['file_foto'] ?? 'logokominfo.png', 'attr') ?>"
+                                        onclick="openServiceModal(this)">
                                         <div class="card-body p-4 d-flex flex-column text-center">
                                             <div class="d-flex align-items-center justify-content-center mb-3">
-                                                <div class="bg-light d-flex align-items-center justify-content-center shadow-sm" style="width: 70px; height: 70px; border-radius: 50%;">
-                                                    <img src="<?= base_url('assets/image/logo_app/' . $layanan['file_foto']) ?>" alt="Icon" style="width: 40px; height: 40px; object-fit: contain;">
-                                                </div>
+                                                <?= $renderServiceIcon($layanan, 70, 40, 'circle') ?>
                                             </div>
-                                            <h5 class="card-title text-dark font-weight-bold mb-2" style="font-size: 1rem;"><?= $layanan['nama_pelayanan'] ?></h5>
+                                            <h5 class="card-title text-dark font-weight-bold mb-2" style="font-size: 1rem;">
+                                                <?= esc($layanan['nama_pelayanan']) ?>
+                                            </h5>
                                             <p class="card-text text-muted small flex-grow-1 mb-0" style="line-height: 1.5; font-size: 0.85rem;">
-                                                <?= substr(strip_tags($layanan['deskripsi']), 0, 70) ?>...
+                                                <?= esc(mb_strimwidth(strip_tags($layanan['deskripsi'] ?? ''), 0, 70, '...')) ?>
                                             </p>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
-                        <!-- ✅ Panah TARUH DI SINI -->
-                        
-                    </div> 
+                    </div>
 
                     <!-- Full Grid View (Hidden by default) -->
                     <div class="row d-none" id="services-grid">
                         <?php foreach($list_pelayanan as $layanan): ?>
                             <?php if($layanan['active'] == 1): ?>
                             <div class="col-lg-6 col-md-6 col-12 mb-4">
-                                <a href="<?= $urlPengajuan . '?pelayanan=' . $layanan['id_pelayanan'] ?>" class="card shadow-sm h-100 hover-up border-0 text-decoration-none" style="border-radius: 15px; cursor: pointer;">
-                                       <div class="card-body p-4 d-flex flex-column">
+                                <div class="card shadow-sm h-100 hover-up border-0 text-decoration-none service-card"
+                                    style="border-radius: 15px; cursor: pointer;"
+                                    data-id="<?= (int)$layanan['id_pelayanan'] ?>"
+                                    data-name="<?= esc($layanan['nama_pelayanan'], 'attr') ?>"
+                                    data-desc="<?= esc($layanan['deskripsi'] ?? '', 'attr') ?>"
+                                    data-icon-mode="<?= esc($layanan['icon_mode'] ?? 'image', 'attr') ?>"
+                                    data-iconify="<?= esc($layanan['iconify_name'] ?? '', 'attr') ?>"
+                                    data-icon-color="<?= esc($layanan['icon_color'] ?? '#4f46e5', 'attr') ?>"
+                                    data-icon-bg="<?= esc($layanan['icon_bg_color'] ?? '#eef2ff', 'attr') ?>"
+                                    data-file="<?= esc($layanan['file_foto'] ?? 'logokominfo.png', 'attr') ?>"
+                                    onclick="openServiceModal(this)">
+                                    <div class="card-body p-4 d-flex flex-column">
                                         <div class="d-flex align-items-center mb-3">
-                                            <div class="bg-light mr-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px; border-radius: 15px;">
-                                                <img src="<?= base_url('assets/image/logo_app/' . $layanan['file_foto']) ?>" alt="Icon" style="width: 35px; height: 35px; object-fit: contain;">
+                                            <div class="mr-3">
+                                                <?= $renderServiceIcon($layanan, 60, 35, 'rounded') ?>
                                             </div>
-                                            <h5 class="card-title text-dark font-weight-bold mb-0" style="font-size: 1.1rem;"><?= $layanan['nama_pelayanan'] ?></h5>
+                                            <h5 class="card-title text-dark font-weight-bold mb-0" style="font-size: 1.1rem;">
+                                                <?= esc($layanan['nama_pelayanan']) ?>
+                                            </h5>
                                         </div>
                                         <p class="card-text text-muted mb-0 flex-grow-1" style="line-height: 1.6; font-size: 0.95rem;">
-                                            <?= substr(strip_tags($layanan['deskripsi']), 0, 100) ?>...
+                                            <?= esc(mb_strimwidth(strip_tags($layanan['deskripsi'] ?? ''), 0, 100, '...')) ?>
                                         </p>
                                     </div>
-                                </a>
+                                </div>
                             </div>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -223,6 +264,30 @@
     </div>
 </section>
 
+<!-- Modal Detail Layanan -->
+<div class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="border-radius:18px; border:none; overflow:hidden;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title">Detail Layanan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center pt-2">
+                <div id="serviceModalIcon" class="mx-auto mb-3"></div>
+                <h4 id="serviceModalTitle" class="font-weight-bold text-dark mb-2"></h4>
+                <p id="serviceModalDesc" class="text-muted mb-0" style="line-height:1.6;"></p>
+            </div>
+            <!-- <div class="modal-footer border-0 justify-content-center pt-0 pb-4">
+                <a href="#" id="serviceModalAction" class="btn btn-primary px-4 rounded-pill">
+                    <i class="fas fa-paper-plane mr-1"></i> Ajukan Sekarang
+                </a>
+            </div> -->
+        </div>
+    </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -248,6 +313,10 @@
                 <div class="form-group">
                     <label>Instansi Pemohon</label>
                     <input type="text" id="modal_aula" class="form-control" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Status Tiket</label>
+                    <input type="text" id="modal_status" class="form-control" disabled>
                 </div>
             </div>
             <div class="modal-footer">
@@ -295,6 +364,37 @@
         }
     });
     swiper.on('touchStart', () => { swiper.allowClick = true; });
+
+function openServiceModal(el) {
+    const id = el.dataset.id || '';
+    const name = el.dataset.name || '';
+    const desc = el.dataset.desc || '';
+    const mode = el.dataset.iconMode || 'image';
+    const iconify = el.dataset.iconify || '';
+    const iconColor = el.dataset.iconColor || '#4f46e5';
+    const iconBg = el.dataset.iconBg || '#eef2ff';
+    const file = el.dataset.file || 'logokominfo.png';
+
+    $('#serviceModalTitle').text(name);
+    $('#serviceModalDesc').text(desc || 'Deskripsi layanan belum tersedia.');
+    $('#serviceModalAction').attr('href', "<?= base_url('pengajuan') ?>?pelayanan=" + id);
+
+    if (mode === 'iconify' && iconify !== '') {
+        $('#serviceModalIcon').html(
+            '<div class="d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:86px;height:86px;border-radius:24px;background:' + iconBg + ';">' +
+            '<iconify-icon icon="' + iconify + '" width="46" height="46" style="color:' + iconColor + ';"></iconify-icon>' +
+            '</div>'
+        );
+    } else {
+        $('#serviceModalIcon').html(
+            '<div class="d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:86px;height:86px;border-radius:24px;background:#f8fafc;">' +
+            '<img src="<?= base_url('assets/image/logo_app') ?>/' + file + '" style="width:46px;height:46px;object-fit:contain;">' +
+            '</div>'
+        );
+    }
+
+    $('#serviceModal').modal('show');
+}
 
 function toggleServices() {
     var swiperDiv = document.getElementById("services-swiper");
@@ -371,30 +471,16 @@ function change_calendar() {
                 initialDate: document.getElementById("tgl_now").value,
                 events: data,
                 eventClick: function(info) {
-                    // pakai start kalau end kosong (biar tidak 1970)
                     const start = info.event.start;
-                    const end = info.event.end ? info.event.end : start;
-
-                    // format yang valid untuk input type="datetime-local"
                     const fmtDateTimeLocal = (d) => moment(d).format('YYYY-MM-DDTHH:mm');
-
-                    // ✅ Mapping yang lebih masuk akal sesuai label modal kamu:
-                    // Nama Pelayanan (modal_acara) -> pakai title (atau description kalau kamu mau)
-                    document.getElementById("modal_acara").value = info.event.title || '';
-
-                    // Tanggal Pengajuan (modal_tgl_akhir) -> pakai start (atau extendedProps.tgl_pengajuan kalau ada)
                     const tglPengajuan = info.event.extendedProps?.tgl_pengajuan
                         ? moment(info.event.extendedProps.tgl_pengajuan).toDate()
                         : start;
 
+                    document.getElementById("modal_acara").value = info.event.title || '';
                     document.getElementById("modal_tgl_akhir").value = fmtDateTimeLocal(tglPengajuan);
-
-                    // Instansi Pemohon (modal_aula) -> ambil dari extendedProps kalau backend mengirim
-                    document.getElementById("modal_aula").value =
-                        info.event.extendedProps?.instansi_pemohon
-                        || info.event.extendedProps?.aula
-                        || info.event.extendedProps?.description
-                        || '';
+                    document.getElementById("modal_aula").value = info.event.extendedProps?.instansi_pemohon || '-';
+                    document.getElementById("modal_status").value = info.event.extendedProps?.status_text || '-';
 
                     $('#calendarModal').modal('show');
                 },
@@ -452,11 +538,13 @@ function renderAgenda(events) {
                 </div>
                 <div style="border-left: 1px solid #e0e0e0; height: 35px; margin-right: 15px;"></div>
                 <div style="overflow: hidden;">
-                    <h6 class="mb-1 text-dark font-weight-bold text-truncate" style="font-size: 0.9rem;" title="${event.title}">${event.description}</h6>
-                    <div class="d-flex align-items-center text-muted small">
+                    <h6 class="mb-1 text-dark font-weight-bold text-truncate" style="font-size: 0.9rem;" title="${event.title}">${event.title}</h6>
+                    <div class="d-flex align-items-center text-muted small flex-wrap">
                         <i class="far fa-clock mr-1" style="font-size: 0.8rem;"></i> ${time} WIB
-                         <span class="mx-2">•</span>
-                        <span class="text-truncate" style="max-width: 100px;">${event.title}</span>
+                        <span class="mx-2">•</span>
+                        <span class="text-truncate" style="max-width: 120px;">${event.instansi_pemohon || '-'}</span>
+                        <span class="mx-2">•</span>
+                        <span>${event.status_text || '-'}</span>
                     </div>
                 </div>
             </div>

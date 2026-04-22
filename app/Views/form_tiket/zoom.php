@@ -649,13 +649,21 @@ function add_tiket() {
             },
             success: function(data) {
                 if (data.status == 200) {
-                    Swal.fire({
-                        position: 'top-center',
-                        icon: 'success',
-                        title: 'Berhasil !',
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+                    if (data.is_conflict) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Jadwal Nabrak',
+                            html: (data.message || 'Tiket otomatis ditolak karena jadwal nabrak.').replace(/\n/g, '<br>')
+                        });
+                    } else {
+                        Swal.fire({
+                            position: 'top-center',
+                            icon: 'success',
+                            title: 'Berhasil !',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
                     reset();
                     document.getElementById("form_aula").style.display = "none";
                     document.getElementById('box_aula').classList.remove("wizard-step-active");

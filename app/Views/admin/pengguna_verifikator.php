@@ -55,8 +55,8 @@
                                 <input id="username" type="number" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label>Id Chat</label>
-                                <input id="id_chat" type="number" class="form-control">
+                                <label>Kontak (Email / Id Chat)</label>
+                                <input id="id_chat" type="text" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Daftar Pelayanan</label>
@@ -88,15 +88,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Ubah Id Chat</h5>
+                <h5 class="modal-title">Form Ubah Kontak</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Id Chat</label>
-                    <input id="id_chat_ubah" type="number" class="form-control">
+                    <label>Kontak (Email / Id Chat)</label>
+                    <input id="id_chat_ubah" type="text" class="form-control">
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
@@ -185,8 +185,8 @@ function remove_invalid() {
     document.getElementById('username').classList.remove("is-invalid");
 }
 
-function open_modal_id_chat($id, $id_chat) {
-    document.getElementById('id_chat_ubah').value = $id_chat;
+function open_modal_id_chat($id, $email) {
+    document.getElementById('id_chat_ubah').value = $email;
     document.getElementById("ubah_tombol").innerHTML =
         '<button onclick="update_id_chat(' + $id + ')" type="button" class="btn btn-primary">Simpan</button>';
     $('#idChatModal').modal('show');
@@ -246,7 +246,7 @@ function tambah_user() {
         Swal.fire({
             icon: 'error',
             title: 'Gagal...',
-            text: 'Form Id Chat Kosong !'
+            text: 'Form Kontak Kosong !'
         });
     } else if ($("#myPelayanan").val() == null) {
         Swal.fire({
@@ -264,7 +264,7 @@ function tambah_user() {
         var formData = new FormData();
         formData.append('nama', document.getElementById("nama").value);
         formData.append('nip', document.getElementById("username").value);
-        formData.append('id_chat', document.getElementById("id_chat").value);
+        formData.append('email', document.getElementById("id_chat").value);
         // formData.append('foto', document.getElementById("foto").files[0]);
         formData.append('pelayanan', $("#myPelayanan").val());
 
@@ -366,7 +366,7 @@ function get_data() {
                     button +=
                         '<div class="text-small text-muted">' + data +
                         ' <div class="bullet"></div> <span class="text-primary">' +
-                        row.id_chat + '</span>';
+                        row.email + '</span>';
 
                     if (row.active == 1) {
                         button +=
@@ -404,7 +404,7 @@ function get_data() {
                 "data": "id_ssuser",
                 "render": function(data, type, row) {
                     var button =
-                        '<button onclick="open_modal_id_chat(' + data + ',' + row.id_chat +
+                        '<button onclick="open_modal_id_chat(' + data + ", '" + row.email + "'" +
                         ')" class="btn btn-icon btn-primary mr-2"><i class="fas fa-key"></i></button>';
                     // button +=
                     //     '<button onclick="open_modal_foto(' + data +
@@ -516,7 +516,7 @@ function update_active($status, $id) {
 function update_id_chat($id) {
     var formData = new FormData();
     formData.append('id_ssuser', $id);
-    formData.append('id_chat', document.getElementById("id_chat_ubah").value);
+    formData.append('email', document.getElementById("id_chat_ubah").value);
 
     $.ajax({
         url: "<?= base_url() ?>/admin/pengguna/update_id_chat",

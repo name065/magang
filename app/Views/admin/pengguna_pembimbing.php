@@ -85,8 +85,8 @@
                                 <input id="username" type="number" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label>Id Chat</label>
-                                <input id="email" type="email" class="form-control">
+                                <label>Kontak (Email / Id Chat)</label>
+                                <input id="email" type="text" class="form-control">
                             </div>
 
                             <!-- <div class="form-group">
@@ -119,15 +119,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Ubah Id Chat</h5>
+                <h5 class="modal-title">Form Ubah Kontak</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Id Chat</label>
-                    <input id="id_chat_ubah" type="number" class="form-control">
+                    <label>Kontak (Email / Id Chat)</label>
+                    <input id="id_chat_ubah" type="text" class="form-control">
                 </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">
@@ -283,7 +283,7 @@ function ubah_user($id) {
         Swal.fire({
             icon: 'error',
             title: 'Gagal...',
-            text: 'Form Id Chat Kosong !'
+            text: 'Form Kontak Kosong !'
         });
     } else {
 
@@ -425,7 +425,7 @@ function tambah_user() {
         Swal.fire({
             icon: 'error',
             title: 'Gagal...',
-            text: 'Form Id Chat Kosong !'
+            text: 'Form Kontak Kosong !'
         });
     } else {
 
