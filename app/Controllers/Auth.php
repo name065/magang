@@ -145,6 +145,7 @@ class Auth extends BaseController
         $response = [
           'status' => 200,
           'message' => "Berhasil.",
+          'redirect' => base_url('/' . $role . '/dashboard'),
         ];
       } else {
         $response = [

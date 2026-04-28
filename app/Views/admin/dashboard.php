@@ -87,7 +87,7 @@
     <!-- Header -->
     <div class="dash-header">
         <h2>Selamat Datang, <?= session()->get('nama') ?> 👋</h2>
-        <p>Dashboard Admin — <?= date('l, d F Y') ?></p>
+        <p>Dashboard <?= esc($role) ?> — <?= date('l, d F Y') ?></p>
     </div>
 
     <!-- Stat Cards -->
@@ -126,7 +126,7 @@
                 <img src="<?= base_url() ?>/public/assets/image/avatar/<?= $url ?>" alt="avatar">
                 <div class="p-name"><?= $nama ?></div>
                 <div class="p-role"><?= $role ?></div>
-                <div class="p-badge"><i class="fas fa-shield-alt mr-1"></i>Super Admin</div>
+                <div class="p-badge"><i class="fas fa-shield-alt mr-1"></i><?= esc($role) ?></div>
             </div>
         </div>
 
@@ -216,10 +216,6 @@
                     <label>Instansi Pemohon</label>
                     <input type="text" id="modal_aula" class="form-control" disabled style="border-radius:10px;">
                 </div>
-                <div class="form-group">
-                    <label>Status Tiket</label>
-                    <input type="text" id="modal_status" class="form-control" disabled style="border-radius:10px;">
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius:8px;">Tutup</button>
@@ -250,7 +246,7 @@ function change_tiket(id) {
 function change_tiket_count(id) {
     var fd = new FormData(); fd.append('id', id);
     $.ajax({
-        url: "<?= base_url() ?>/admin/dashboard/get_orders",
+        url: "<?= base_url() ?>/<?= session()->get('role') ?>/dashboard/get_orders",
         type: "POST", data: fd, contentType: false, processData: false, cache: false, dataType: "JSON",
         success: function(d) {
             document.getElementById("orders-proses").innerHTML = d["count_proses"];
@@ -263,7 +259,7 @@ function change_tiket_count(id) {
 
 function tiket_count_harian() {
     $.ajax({
-        url: "<?= base_url() ?>/admin/dashboard/get_orders_harian",
+        url: "<?= base_url() ?>/<?= session()->get('role') ?>/dashboard/get_orders_harian",
         type: "GET", dataType: "JSON",
         success: function(data) {
             var today = new Date();
@@ -297,7 +293,7 @@ function tiket_count_harian() {
 function tiket_count_tahunan() {
     var fd = new FormData(); fd.append('tahun', new Date().getFullYear());
     $.ajax({
-        url: "<?= base_url() ?>/admin/dashboard/get_orders_tahunan",
+        url: "<?= base_url() ?>/<?= session()->get('role') ?>/dashboard/get_orders_tahunan",
         type: "POST", data: fd, contentType: false, processData: false, dataType: "JSON",
         success: function(d) {
             new ApexCharts(document.querySelector("#chart_stack"), {
@@ -321,7 +317,7 @@ function tiket_count_tahunan() {
 function change_calendar() {
     var fd = new FormData(); fd.append('tgl', $("#tgl_now").val());
     $.ajax({
-        url: "<?= base_url() ?>/admin/dashboard/get_orders_calendar",
+        url: "<?= base_url() ?>/<?= session()->get('role') ?>/dashboard/get_orders_calendar",
         type: "POST", data: fd, contentType: false, processData: false, cache: false, dataType: "JSON",
         success: function(data) {
             var calendarEl = document.getElementById('calendar');
@@ -331,16 +327,13 @@ function change_calendar() {
                 initialDate: document.getElementById("tgl_now").value,
                 events: data,
                 eventClick: function(info) {
-                    const start = info.event.start ? info.event.start : new Date();
-                    const tglPengajuan = info.event.extendedProps?.tgl_pengajuan
-                        ? moment(info.event.extendedProps.tgl_pengajuan).toDate()
-                        : start;
-
-                    document.getElementById("modal_acara").value = info.event.title || '-';
-                    document.getElementById("modal_tgl_akhir").value = moment(tglPengajuan).format('YYYY-MM-DDTHH:mm');
-                    document.getElementById("modal_aula").value = info.event.extendedProps?.instansi_pemohon || '-';
-                    document.getElementById("modal_status").value = info.event.extendedProps?.status_text || '-';
+                    const now_end = new Date(info.event.end);
+                    document.getElementById("modal_aula").value = info.event.title;
+                    document.getElementById("modal_tgl_akhir").value = moment(now_end).format('YYYY-MM-DDTHH:mm');
                     $('#calendarModal').modal('show');
+                },
+                eventDidMount: function(info) {
+                    document.getElementById("modal_acara").value = info.event.extendedProps["description"];
                 },
             });
             calendar.render();

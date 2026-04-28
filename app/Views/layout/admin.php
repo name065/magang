@@ -334,7 +334,7 @@
                     </div>
                     <ul class="sidebar-menu">
                         <li class="menu-header">Dashboard</li>
-                        <li id="dashboard"><a class="nav-link" href="<?= base_url() ?>/admin/dashboard"><i
+                        <li id="dashboard"><a class="nav-link" href="<?= base_url() ?>/<?= session()->get('role') ?>/dashboard"><i
                                     class="fas fa-chart-pie"></i>
                                 <span>Dashboard</span></a></li>
 
@@ -364,11 +364,11 @@
 
 
                         <!-- Start If -->
-                        <?php if(session()->get('id_role') != 2){ ?>
-                        <!-- <li id="magang"><a class="nav-link"
+                        <?php if(in_array((int) session()->get('id_role'), [0,1,3,4], true)){ ?>
+                        <li id="magang"><a class="nav-link"
                                 href="<?= base_url() ?>/<?= session()->get('role') ?>/magang"><i
                                     class="fas fa-user-graduate"></i>
-                                <span>Magang</span></a></li> -->
+                                <span>Magang</span></a></li>
                         <!-- End If -->
                         <?php }?>
 
@@ -392,14 +392,14 @@
                         </li> -->
 
                         <!-- Start If -->
-                        <?php if(session()->get('id_role') == 0){ ?>
+                        <?php if(in_array((int) session()->get('id_role'), [0,1], true)){ ?>
                         <!-- Header -->
                         <li class="menu-header">Data Master</li>
+
                         <li id="pengguna" class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i
                                     class="fas fa-user-cog"></i><span>Pengguna</span></a>
                             <ul class="dropdown-menu">
-                                <!-- Start If -->
                                 <?php if(session()->get('id_role') == 0){ ?>
                                 <li id="admin"><a class="nav-link"
                                         href="<?= base_url() ?>/admin/pengguna/admin">Admin</a></li>
@@ -407,25 +407,19 @@
                                         href="<?= base_url() ?>/admin/pengguna/operator">Operator</a></li>
                                 <li id="verifikator"><a class="nav-link"
                                         href="<?= base_url() ?>/admin/pengguna/verifikator">Verifikator</a></li>
-                                <!-- End If -->
                                 <?php }?>
-
-                                <!-- <li id="pembimbing"><a class="nav-link"
+                                <li id="pembimbing"><a class="nav-link"
                                         href="<?= base_url() ?>/<?= session()->get('role') ?>/pengguna/pembimbing">Pembimbing
-                                        Magang</a></li> -->
-
-                                <!-- Start If -->
-                                <?php if(session()->get('id_role') == 0){ ?>
-                                <!-- <li id="user"><a class="nav-link" href="<?= base_url() ?>/admin/pengguna/user">User</a>
-                                </li> -->
-                                <!-- End If -->
-                                <?php }?>
-
+                                        Magang</a></li>
                             </ul>
                         </li>
+
+                        <li id="sub-bagian"><a class="nav-link"
+                                href="<?= base_url() ?>/<?= session()->get('role') ?>/sub-bagian"><i
+                                    class="fas fa-network-wired"></i>
+                                <span>Sub Bagian</span></a></li>
                         <!-- End If -->
                         <?php }?>
-
 
                         <!-- Start If -->
                         <?php if(session()->get('id_role') == 0){ ?>
@@ -442,34 +436,12 @@
                         <li id="instansi"><a class="nav-link" href="<?= base_url() ?>/admin/opd"><i
                                     class="fas fa-landmark"></i>
                                 <span>Instansi</span></a></li>
-
-
-                        <!-- End If -->
-                        <?php }?>
-
-                        <!-- Start If -->
-                        <?php if(session()->get('id_role') == 0){ ?>
-                        <li id="sub-bagian"><a class="nav-link"
-                                href="<?= base_url() ?>/<?= session()->get('role') ?>/sub-bagian"><i
-                                    class="fas fa-network-wired"></i>
-                                <span>Sub Bagian</span></a></li>
-                        <!-- End If -->
-                        <?php }?>
-
-
-                        <!-- Start If -->
-                        <?php if(session()->get('id_role') == 0){ ?>
                         <li id="faq"><a class="nav-link" href="<?= base_url() ?>/admin/faq"><i
                                     class="far fa-question-circle"></i>
                                 <span>FAQ</span></a></li>
                         <!-- End If -->
                         <?php }?>
 
-                        <!-- Start If -->
-                        <?php if(session()->get('id_role') == 0){ ?>
-
-                        <!-- End If -->
-                        <?php }?>
                     </ul>
                 </aside>
             </div>

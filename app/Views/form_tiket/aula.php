@@ -75,7 +75,7 @@
                             <div class="form-group row align-items-center">
                                 <label class="col-md-12 text-md-left text-left">Surat Pengantar</label>
                                 <div class="col-lg-12 col-md-12">
-                                    <input type="file" id="berkas" class="form-control" accept="application/pdf">
+                                    <input type="file" id="berkas" class="form-control" accept="jpg/pdf">
                                 </div>
                             </div>
 

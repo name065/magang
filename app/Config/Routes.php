@@ -173,9 +173,6 @@ $routes->group('admin', ['filter' => 'adminAuth'], static function ($routes) {
     $routes->post('update_field', 'Admin::update_pelayanan_field');
     $routes->post('update_field_status', 'Admin::update_status_pelayanan_field');
     $routes->post('del_field', 'Admin::del_pelayanan_field');
-    $routes->get('get_icon', 'Admin::get_pelayanan_icon');
-    $routes->post('save_icon', 'Admin::save_pelayanan_icon');
-    $routes->post('suggest_icon', 'Admin::suggest_pelayanan_icon');
 
     $routes->post('update_status', 'Admin::update_status_pelayanan');
     $routes->post('del_pelayanan', 'Admin::del_pelayanan');
@@ -236,6 +233,7 @@ $routes->group('operator', ['filter' => 'operatorAuth'], static function ($route
   $routes->post('dashboard/get_orders', 'Operator::orders_tiket');
   $routes->get('dashboard/get_orders_harian', 'Operator::orders_tiket_harian');
   $routes->post('dashboard/get_orders_tahunan', 'Operator::orders_tiket_tahunan');
+  $routes->post('dashboard/get_orders_calendar', 'Operator::orders_tiket_kalender');
   $routes->get('dashboard/get_user', 'Operator::orders_user');
   $routes->get('profile', 'Admin::profile_page');
   $routes->get('print_tiket/(:num)/(:alphanum)', 'Admin::print_tiket/$1/$2');
@@ -309,6 +307,7 @@ $routes->group('verifikator', ['filter' => 'verifikatorAuth'], static function (
   $routes->post('dashboard/get_orders', 'Operator::orders_tiket');
   $routes->get('dashboard/get_orders_harian', 'Operator::orders_tiket_harian');
   $routes->post('dashboard/get_orders_tahunan', 'Operator::orders_tiket_tahunan');
+  $routes->post('dashboard/get_orders_calendar', 'Operator::orders_tiket_kalender');
   $routes->get('dashboard/get_user', 'Operator::orders_user');
   $routes->get('profile', 'Admin::profile_page');
   $routes->get('print_tiket/(:num)/(:alphanum)', 'Admin::print_tiket/$1/$2');
@@ -364,6 +363,7 @@ $routes->group('pembimbing', ['filter' => 'pembimbingAuth'], static function ($r
   $routes->post('dashboard/get_orders', 'Operator::orders_tiket');
   $routes->get('dashboard/get_orders_harian', 'Operator::orders_tiket_harian');
   $routes->post('dashboard/get_orders_tahunan', 'Operator::orders_tiket_tahunan');
+  $routes->post('dashboard/get_orders_calendar', 'Operator::orders_tiket_kalender');
   $routes->get('dashboard/get_user', 'Operator::orders_user');
   $routes->get('profile', 'Admin::profile_page');
 
@@ -406,6 +406,7 @@ $routes->group('user', ['filter' => 'magangAuth'], static function ($routes) {
   $routes->post('dashboard/get_orders', 'Operator::orders_tiket');
   $routes->get('dashboard/get_orders_harian', 'Operator::orders_tiket_harian');
   $routes->post('dashboard/get_orders_tahunan', 'Operator::orders_tiket_tahunan');
+  $routes->post('dashboard/get_orders_calendar', 'Operator::orders_tiket_kalender');
   $routes->get('dashboard/get_user', 'Operator::orders_user');
   $routes->get('profile', 'Admin::profile_page');
 

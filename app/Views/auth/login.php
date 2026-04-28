@@ -237,7 +237,7 @@ function sslogin() {
             success: function(data) {
                 // console.log(data);
                 if (data.status == 200) {
-                    window.open("<?= base_url() ?>/admin/dashboard", "_self");
+                    window.open(data.redirect || "<?= base_url() ?>/admin/dashboard", "_self");
                 } else {
                     Swal.fire(
                         "Gagal",
